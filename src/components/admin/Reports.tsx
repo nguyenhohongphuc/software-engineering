@@ -22,44 +22,44 @@ export default function Reports() {
 
   // Sample data for charts
   const sessionsByMonth = [
-    { month: 'Tháng 6', sessions: 45 },
-    { month: 'Tháng 7', sessions: 52 },
-    { month: 'Tháng 8', sessions: 48 },
-    { month: 'Tháng 9', sessions: 65 },
-    { month: 'Tháng 10', sessions: 72 },
+    { month: 'June', sessions: 45 },
+    { month: 'July', sessions: 52 },
+    { month: 'August', sessions: 48 },
+    { month: 'September', sessions: 65 },
+    { month: 'October', sessions: 72 },
   ];
 
   const sessionsBySubject = [
-    { subject: 'Giải tích', sessions: 45, color: '#528DFF' },
-    { subject: 'Lập trình', sessions: 38, color: '#10b981' },
-    { subject: 'Vật lý', sessions: 28, color: '#f59e0b' },
-    { subject: 'CSDL', sessions: 25, color: '#8b5cf6' },
-    { subject: 'Khác', sessions: 18, color: '#6b7280' },
+    { subject: 'Calculus', sessions: 45, color: '#528DFF' },
+    { subject: 'Programming', sessions: 38, color: '#10b981' },
+    { subject: 'Physics', sessions: 28, color: '#f59e0b' },
+    { subject: 'Database', sessions: 25, color: '#8b5cf6' },
+    { subject: 'Others', sessions: 18, color: '#6b7280' },
   ];
 
   const tutorPerformance = [
-    { tutor: 'Trần Thị B', sessions: 48, rating: 4.8, students: 12 },
-    { tutor: 'Nguyễn Văn D', sessions: 38, rating: 4.9, students: 10 },
-    { tutor: 'Lê Thị E', sessions: 35, rating: 4.7, students: 8 },
-    { tutor: 'Phạm Văn F', sessions: 42, rating: 4.9, students: 11 },
+    { tutor: 'Tran Thi B', sessions: 48, rating: 4.8, students: 12 },
+    { tutor: 'Nguyen Van D', sessions: 38, rating: 4.9, students: 10 },
+    { tutor: 'Le Thi E', sessions: 35, rating: 4.7, students: 8 },
+    { tutor: 'Pham Van F', sessions: 42, rating: 4.9, students: 11 },
   ];
 
   const attendanceData = [
-    { name: 'Có mặt', value: 245, color: '#10b981' },
-    { name: 'Vắng', value: 15, color: '#ef4444' },
-    { name: 'Hủy', value: 22, color: '#f59e0b' },
+    { name: 'Present', value: 245, color: '#10b981' },
+    { name: 'Absent', value: 15, color: '#ef4444' },
+    { name: 'Cancelled', value: 22, color: '#f59e0b' },
   ];
 
   const handleExport = (format: 'pdf' | 'excel') => {
-    toast.success(`Đang xuất báo cáo dạng ${format.toUpperCase()}...`);
+    toast.success(`Exporting report as ${format.toUpperCase()}...`);
   };
 
   return (
     <div className="p-6">
       <div>
-        <h1>Báo cáo & Thống kê</h1>
+        <h1>Reports & Analytics</h1>
         <p className="text-gray-600 mt-1">
-          Xem và xuất báo cáo chi tiết về hoạt động hệ thống
+          View and export detailed reports on system activities
         </p>
       </div>
 
@@ -68,13 +68,13 @@ export default function Reports() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Filter className="h-5 w-5" />
-            Bộ lọc báo cáo
+            Report Filters
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="startDate">Từ ngày</Label>
+              <Label htmlFor="startDate">From Date</Label>
               <Input
                 id="startDate"
                 type="date"
@@ -84,7 +84,7 @@ export default function Reports() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="endDate">Đến ngày</Label>
+              <Label htmlFor="endDate">To Date</Label>
               <Input
                 id="endDate"
                 type="date"
@@ -94,31 +94,31 @@ export default function Reports() {
             </div>
 
             <div className="space-y-2">
-              <Label>Gia sư</Label>
+              <Label>Tutor</Label>
               <Select value={selectedTutor} onValueChange={setSelectedTutor}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Chọn gia sư" />
+                  <SelectValue placeholder="Select tutor" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Tất cả gia sư</SelectItem>
-                  <SelectItem value="tutor1">Trần Thị B</SelectItem>
-                  <SelectItem value="tutor2">Nguyễn Văn D</SelectItem>
-                  <SelectItem value="tutor3">Lê Thị E</SelectItem>
+                  <SelectItem value="all">All Tutors</SelectItem>
+                  <SelectItem value="tutor1">Tran Thi B</SelectItem>
+                  <SelectItem value="tutor2">Nguyen Van D</SelectItem>
+                  <SelectItem value="tutor3">Le Thi E</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label>Môn học</Label>
+              <Label>Subject</Label>
               <Select value={selectedSubject} onValueChange={setSelectedSubject}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Chọn môn học" />
+                  <SelectValue placeholder="Select subject" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Tất cả môn học</SelectItem>
-                  <SelectItem value="math">Giải tích 2</SelectItem>
-                  <SelectItem value="programming">Lập trình C++</SelectItem>
-                  <SelectItem value="physics">Vật lý đại cương</SelectItem>
+                  <SelectItem value="all">All Subjects</SelectItem>
+                  <SelectItem value="math">Calculus 2</SelectItem>
+                  <SelectItem value="programming">C++ Programming</SelectItem>
+                  <SelectItem value="physics">General Physics</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -126,15 +126,15 @@ export default function Reports() {
 
           <div className="flex gap-3 mt-4">
             <Button className="bg-[#528DFF] hover:bg-[#3d7ae8]">
-              Áp dụng bộ lọc
+              Apply Filters
             </Button>
             <Button variant="outline" onClick={() => handleExport('pdf')}>
               <Download className="mr-2 h-4 w-4" />
-              Xuất PDF
+              Export PDF
             </Button>
             <Button variant="outline" onClick={() => handleExport('excel')}>
               <Download className="mr-2 h-4 w-4" />
-              Xuất Excel
+              Export Excel
             </Button>
           </div>
         </CardContent>
@@ -146,7 +146,7 @@ export default function Reports() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Tổng buổi học</p>
+                <p className="text-sm text-gray-600">Total Sessions</p>
                 <p className="text-2xl mt-1">282</p>
               </div>
               <BookOpen className="h-8 w-8 text-[#528DFF]" />
@@ -158,7 +158,7 @@ export default function Reports() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Tổng giờ dạy</p>
+                <p className="text-sm text-gray-600">Total Hours</p>
                 <p className="text-2xl mt-1">564</p>
               </div>
               <Calendar className="h-8 w-8 text-green-600" />
@@ -170,7 +170,7 @@ export default function Reports() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Số sinh viên</p>
+                <p className="text-sm text-gray-600">Total Students</p>
                 <p className="text-2xl mt-1">156</p>
               </div>
               <Users className="h-8 w-8 text-purple-600" />
@@ -182,7 +182,7 @@ export default function Reports() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Tỷ lệ hoàn thành</p>
+                <p className="text-sm text-gray-600">Completion Rate</p>
                 <p className="text-2xl mt-1">87%</p>
               </div>
               <div className="text-2xl text-green-600">✓</div>
@@ -196,7 +196,7 @@ export default function Reports() {
         {/* Sessions by Month */}
         <Card>
           <CardHeader>
-            <CardTitle>Số buổi học theo tháng</CardTitle>
+            <CardTitle>Sessions by Month</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -206,7 +206,7 @@ export default function Reports() {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="sessions" stroke="#528DFF" name="Buổi học" strokeWidth={2} />
+                <Line type="monotone" dataKey="sessions" stroke="#528DFF" name="Sessions" strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
@@ -215,7 +215,7 @@ export default function Reports() {
         {/* Sessions by Subject */}
         <Card>
           <CardHeader>
-            <CardTitle>Phân bố theo môn học</CardTitle>
+            <CardTitle>Distribution by Subject</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -243,7 +243,7 @@ export default function Reports() {
         {/* Tutor Performance */}
         <Card>
           <CardHeader>
-            <CardTitle>Hiệu suất gia sư</CardTitle>
+            <CardTitle>Tutor Performance</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -253,8 +253,8 @@ export default function Reports() {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="sessions" fill="#528DFF" name="Buổi học" />
-                <Bar dataKey="students" fill="#10b981" name="Sinh viên" />
+                <Bar dataKey="sessions" fill="#528DFF" name="Sessions" />
+                <Bar dataKey="students" fill="#10b981" name="Students" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -263,7 +263,7 @@ export default function Reports() {
         {/* Attendance Rate */}
         <Card>
           <CardHeader>
-            <CardTitle>Tỷ lệ tham dự</CardTitle>
+            <CardTitle>Attendance Rate</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -292,18 +292,18 @@ export default function Reports() {
       {/* Detailed Report Table */}
       <Card className="mt-6">
         <CardHeader>
-          <CardTitle>Báo cáo chi tiết hiệu suất gia sư</CardTitle>
+          <CardTitle>Detailed Tutor Performance Report</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left py-3 px-4">Gia sư</th>
-                  <th className="text-right py-3 px-4">Số buổi học</th>
-                  <th className="text-right py-3 px-4">Số sinh viên</th>
-                  <th className="text-right py-3 px-4">Đánh giá TB</th>
-                  <th className="text-right py-3 px-4">Tỷ lệ hoàn thành</th>
+                  <th className="text-left py-3 px-4">Tutor</th>
+                  <th className="text-right py-3 px-4">Sessions</th>
+                  <th className="text-right py-3 px-4">Students</th>
+                  <th className="text-right py-3 px-4">Avg. Rating</th>
+                  <th className="text-right py-3 px-4">Completion Rate</th>
                 </tr>
               </thead>
               <tbody>

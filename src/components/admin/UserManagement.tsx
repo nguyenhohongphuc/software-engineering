@@ -55,7 +55,7 @@ export default function UserManagement() {
   const [users, setUsers] = useState<User[]>([
     {
       id: 1,
-      name: 'Nguyễn Văn A',
+      name: 'Nguyen Van A',
       email: 'nguyenvana@hcmut.edu.vn',
       role: 'student',
       avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop',
@@ -65,7 +65,7 @@ export default function UserManagement() {
     },
     {
       id: 2,
-      name: 'Trần Thị B',
+      name: 'Tran Thi B',
       email: 'tranthib@hcmut.edu.vn',
       role: 'tutor',
       avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop',
@@ -76,7 +76,7 @@ export default function UserManagement() {
     },
     {
       id: 3,
-      name: 'Lê Văn C',
+      name: 'Le Van C',
       email: 'levanc@hcmut.edu.vn',
       role: 'student',
       avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
@@ -86,7 +86,7 @@ export default function UserManagement() {
     },
     {
       id: 4,
-      name: 'Phạm Thị D',
+      name: 'Pham Thi D',
       email: 'phamthid@hcmut.edu.vn',
       role: 'student',
       avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop',
@@ -96,7 +96,7 @@ export default function UserManagement() {
     },
     {
       id: 5,
-      name: 'Hoàng Văn E',
+      name: 'Hoang Van E',
       email: 'hoangvane@hcmut.edu.vn',
       role: 'tutor',
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
@@ -107,7 +107,7 @@ export default function UserManagement() {
     },
     {
       id: 6,
-      name: 'Đỗ Thị F',
+      name: 'Do Thi F',
       email: 'dothif@hcmut.edu.vn',
       role: 'student',
       avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop',
@@ -135,15 +135,15 @@ export default function UserManagement() {
         ? { ...u, status: u.status === 'active' ? 'disabled' as const : 'active' as const }
         : u
     ));
-    toast.success('Đã cập nhật trạng thái người dùng');
+    toast.success('User status updated');
   };
 
   return (
     <div className="p-6">
       <div>
-        <h1>Quản lý Người dùng</h1>
+        <h1>User Management</h1>
         <p className="text-gray-600 mt-1">
-          Quản lý tài khoản sinh viên và gia sư
+          Manage student and tutor accounts
         </p>
       </div>
 
@@ -153,7 +153,7 @@ export default function UserManagement() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Tổng người dùng</p>
+                <p className="text-sm text-gray-600">Total Users</p>
                 <p className="text-2xl mt-1">{users.length}</p>
               </div>
               <UserCheck className="h-8 w-8 text-[#528DFF]" />
@@ -165,12 +165,12 @@ export default function UserManagement() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Sinh viên</p>
+                <p className="text-sm text-gray-600">Students</p>
                 <p className="text-2xl mt-1">
                   {users.filter(u => u.role === 'student').length}
                 </p>
               </div>
-              <Badge className="text-lg px-3 py-1">SV</Badge>
+              <Badge className="text-lg px-3 py-1">ST</Badge>
             </div>
           </CardContent>
         </Card>
@@ -179,12 +179,12 @@ export default function UserManagement() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Gia sư</p>
+                <p className="text-sm text-gray-600">Tutors</p>
                 <p className="text-2xl mt-1">
                   {users.filter(u => u.role === 'tutor').length}
                 </p>
               </div>
-              <Badge className="text-lg px-3 py-1 bg-green-600">GS</Badge>
+              <Badge className="text-lg px-3 py-1 bg-green-600">TU</Badge>
             </div>
           </CardContent>
         </Card>
@@ -195,7 +195,7 @@ export default function UserManagement() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Filter className="h-5 w-5" />
-            Tìm kiếm và lọc
+            Search and Filter
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -203,7 +203,7 @@ export default function UserManagement() {
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <Input
-                placeholder="Tìm kiếm theo tên hoặc email..."
+                placeholder="Search by name or email..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
@@ -211,12 +211,12 @@ export default function UserManagement() {
             </div>
             <Select value={roleFilter} onValueChange={setRoleFilter}>
               <SelectTrigger className="w-full md:w-48">
-                <SelectValue placeholder="Lọc theo vai trò" />
+                <SelectValue placeholder="Filter by role" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tất cả vai trò</SelectItem>
-                <SelectItem value="student">Sinh viên</SelectItem>
-                <SelectItem value="tutor">Gia sư</SelectItem>
+                <SelectItem value="all">All Roles</SelectItem>
+                <SelectItem value="student">Students</SelectItem>
+                <SelectItem value="tutor">Tutors</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -229,13 +229,13 @@ export default function UserManagement() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Người dùng</TableHead>
+                <TableHead>User</TableHead>
                 <TableHead>Email</TableHead>
-                <TableHead>Vai trò</TableHead>
-                <TableHead>Trạng thái</TableHead>
-                <TableHead>Ngày tham gia</TableHead>
-                <TableHead>Buổi học</TableHead>
-                <TableHead className="text-right">Thao tác</TableHead>
+                <TableHead>Role</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Join Date</TableHead>
+                <TableHead>Sessions</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -253,7 +253,7 @@ export default function UserManagement() {
                   <TableCell>{user.email}</TableCell>
                   <TableCell>
                     <Badge variant={user.role === 'tutor' ? 'default' : 'secondary'}>
-                      {user.role === 'student' ? 'Sinh viên' : 'Gia sư'}
+                      {user.role === 'student' ? 'Student' : 'Tutor'}
                     </Badge>
                   </TableCell>
                   <TableCell>
@@ -261,7 +261,7 @@ export default function UserManagement() {
                       variant={user.status === 'active' ? 'default' : 'secondary'}
                       className={user.status === 'active' ? 'bg-green-600' : 'bg-gray-400'}
                     >
-                      {user.status === 'active' ? 'Hoạt động' : 'Vô hiệu hóa'}
+                      {user.status === 'active' ? 'Active' : 'Disabled'}
                     </Badge>
                   </TableCell>
                   <TableCell>{user.joinedDate}</TableCell>
@@ -277,21 +277,21 @@ export default function UserManagement() {
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="sm">
-                          Thao tác
+                          Actions
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => handleViewDetails(user)}>
                           <Eye className="mr-2 h-4 w-4" />
-                          Xem chi tiết
+                          View Details
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                           <Edit className="mr-2 h-4 w-4" />
-                          Chỉnh sửa
+                          Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleToggleStatus(user.id)}>
                           <Ban className="mr-2 h-4 w-4" />
-                          {user.status === 'active' ? 'Vô hiệu hóa' : 'Kích hoạt'}
+                          {user.status === 'active' ? 'Disable' : 'Enable'}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -307,7 +307,7 @@ export default function UserManagement() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Chi tiết người dùng</DialogTitle>
+            <DialogTitle>User Details</DialogTitle>
           </DialogHeader>
           {selectedUser && (
             <div className="space-y-4">
@@ -320,9 +320,9 @@ export default function UserManagement() {
                   <h3>{selectedUser.name}</h3>
                   <p className="text-sm text-gray-600 mt-1">{selectedUser.email}</p>
                   <div className="flex gap-2 mt-2">
-                    <Badge>{selectedUser.role === 'student' ? 'Sinh viên' : 'Gia sư'}</Badge>
+                    <Badge>{selectedUser.role === 'student' ? 'Student' : 'Tutor'}</Badge>
                     <Badge variant={selectedUser.status === 'active' ? 'default' : 'secondary'}>
-                      {selectedUser.status === 'active' ? 'Hoạt động' : 'Vô hiệu hóa'}
+                      {selectedUser.status === 'active' ? 'Active' : 'Disabled'}
                     </Badge>
                   </div>
                 </div>
@@ -330,16 +330,16 @@ export default function UserManagement() {
 
               <div className="grid grid-cols-2 gap-4 pt-4 border-t">
                 <div>
-                  <p className="text-sm text-gray-600">Ngày tham gia</p>
+                  <p className="text-sm text-gray-600">Join Date</p>
                   <p className="mt-1">{selectedUser.joinedDate}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Tổng buổi học</p>
+                  <p className="text-sm text-gray-600">Total Sessions</p>
                   <p className="mt-1">{selectedUser.totalSessions}</p>
                 </div>
                 {selectedUser.rating && (
                   <div>
-                    <p className="text-sm text-gray-600">Đánh giá</p>
+                    <p className="text-sm text-gray-600">Rating</p>
                     <p className="mt-1">{selectedUser.rating} ⭐</p>
                   </div>
                 )}

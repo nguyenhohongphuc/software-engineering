@@ -8,9 +8,9 @@ export default function TutorDashboard() {
   const upcomingSessions = [
     {
       id: 1,
-      student: 'Nguyễn Văn A',
+      student: 'Nguyen Van A',
       studentAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop',
-      subject: 'Giải tích 2',
+      subject: 'Calculus 2',
       date: '2025-10-30',
       time: '14:00 - 16:00',
       location: 'Online - Google Meet',
@@ -18,12 +18,12 @@ export default function TutorDashboard() {
     },
     {
       id: 2,
-      student: 'Trần Thị C',
+      student: 'Tran Thi C',
       studentAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop',
-      subject: 'Đại số tuyến tính',
+      subject: 'Linear Algebra',
       date: '2025-10-31',
       time: '09:00 - 11:00',
-      location: 'Phòng H1-101',
+      location: 'Room H1-101',
       status: 'confirmed'
     }
   ];
@@ -31,70 +31,70 @@ export default function TutorDashboard() {
   const pendingRequests = [
     {
       id: 1,
-      student: 'Phạm Văn D',
+      student: 'Pham Van D',
       studentAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
-      subject: 'Toán rời rạc',
+      subject: 'Discrete Mathematics',
       requestedTime: '2025-11-02, 15:00 - 17:00',
-      requestedAt: '2 gi�� trước'
+      requestedAt: '2 hours ago'
     }
   ];
 
   const notifications = [
-    { id: 1, message: 'Sinh viên Nguyễn Văn A đã đánh giá 5 sao cho buổi học', time: '1 giờ trước', type: 'success' },
-    { id: 2, message: 'Nhắc nhở: Bạn có buổi học vào ngày mai lúc 14:00', time: '3 giờ trước', type: 'info' },
-    { id: 3, message: 'Bạn có yêu cầu đặt lịch mới cần duyệt', time: '5 giờ trước', type: 'warning' }
+    { id: 1, message: 'Student Nguyen Van A gave you a 5-star rating', time: '1 hour ago', type: 'success' },
+    { id: 2, message: 'Reminder: You have a session tomorrow at 14:00', time: '3 hours ago', type: 'info' },
+    { id: 3, message: 'You have a new booking request pending approval', time: '5 hours ago', type: 'warning' }
   ];
 
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h1>Trang chủ</h1>
-        <p className="text-gray-600 mt-1">Chào mừng bạn quay trở lại!</p>
+        <h1>Dashboard</h1>
+        <p className="text-gray-600 mt-1">Welcome back!</p>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm">Buổi học sắp tới</CardTitle>
+            <CardTitle className="text-sm">Upcoming Sessions</CardTitle>
             <Calendar className="h-4 w-4 text-[#528DFF]" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl">2</div>
-            <p className="text-xs text-gray-600 mt-1">Trong tuần này</p>
+            <p className="text-xs text-gray-600 mt-1">This week</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm">Tổng giờ dạy</CardTitle>
+            <CardTitle className="text-sm">Total Teaching Hours</CardTitle>
             <Clock className="h-4 w-4 text-[#528DFF]" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl">48</div>
-            <p className="text-xs text-gray-600 mt-1">Trong tháng này</p>
+            <p className="text-xs text-gray-600 mt-1">This month</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm">Đánh giá trung bình</CardTitle>
+            <CardTitle className="text-sm">Average Rating</CardTitle>
             <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl">4.8</div>
-            <p className="text-xs text-gray-600 mt-1">42 đánh giá</p>
+            <p className="text-xs text-gray-600 mt-1">42 reviews</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm">Yêu cầu chờ duyệt</CardTitle>
+            <CardTitle className="text-sm">Pending Requests</CardTitle>
             <AlertCircle className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl">1</div>
-            <p className="text-xs text-gray-600 mt-1">Cần xử lý</p>
+            <p className="text-xs text-gray-600 mt-1">Needs action</p>
           </CardContent>
         </Card>
       </div>
@@ -103,7 +103,7 @@ export default function TutorDashboard() {
         {/* Upcoming Sessions */}
         <Card>
           <CardHeader>
-            <CardTitle>Buổi học sắp tới</CardTitle>
+            <CardTitle>Upcoming Sessions</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {upcomingSessions.map((session) => (
@@ -116,10 +116,10 @@ export default function TutorDashboard() {
                   <div className="flex items-start justify-between">
                     <div>
                       <h3 className="text-sm">{session.subject}</h3>
-                      <p className="text-sm text-gray-600">Sinh viên: {session.student}</p>
+                      <p className="text-sm text-gray-600">Student: {session.student}</p>
                     </div>
                     <Badge variant="default" className="bg-green-500">
-                      Đã xác nhận
+                      Confirmed
                     </Badge>
                   </div>
                   <div className="mt-2 text-sm text-gray-600 space-y-1">
@@ -132,7 +132,7 @@ export default function TutorDashboard() {
                     </div>
                   </div>
                   <Button size="sm" className="mt-3 bg-[#528DFF] hover:bg-[#3d7ae8]">
-                    Quản lý buổi học
+                    Manage Session
                   </Button>
                 </div>
               </div>
@@ -143,7 +143,7 @@ export default function TutorDashboard() {
         {/* Pending Requests */}
         <Card>
           <CardHeader>
-            <CardTitle>Yêu cầu đặt lịch chờ duyệt</CardTitle>
+            <CardTitle>Pending Booking Requests</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {pendingRequests.map((request) => (
@@ -155,17 +155,17 @@ export default function TutorDashboard() {
                   </Avatar>
                   <div className="flex-1">
                     <h3 className="text-sm">{request.subject}</h3>
-                    <p className="text-sm text-gray-600">Sinh viên: {request.student}</p>
+                    <p className="text-sm text-gray-600">Student: {request.student}</p>
                     <p className="text-sm text-gray-600 mt-1">
-                      Thời gian: {request.requestedTime}
+                      Time: {request.requestedTime}
                     </p>
                     <p className="text-xs text-gray-500 mt-1">{request.requestedAt}</p>
                     <div className="flex gap-2 mt-3">
                       <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                        Chấp nhận
+                        Accept
                       </Button>
                       <Button size="sm" variant="outline">
-                        Từ chối
+                        Decline
                       </Button>
                     </div>
                   </div>
@@ -174,7 +174,7 @@ export default function TutorDashboard() {
             ))}
             {pendingRequests.length === 0 && (
               <div className="text-center py-8 text-gray-500">
-                Không có yêu cầu nào
+                No pending requests
               </div>
             )}
           </CardContent>
@@ -184,7 +184,7 @@ export default function TutorDashboard() {
       {/* Notifications */}
       <Card>
         <CardHeader>
-          <CardTitle>Thông báo</CardTitle>
+          <CardTitle>Notifications</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           {notifications.map((notif) => (

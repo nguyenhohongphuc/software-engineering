@@ -20,12 +20,12 @@ export default function AdminLayout({ user, onLogout }: AdminLayoutProps) {
   const [currentPage, setCurrentPage] = useState<AdminPage>('dashboard');
 
   const menuItems = [
-    { id: 'dashboard' as AdminPage, label: 'Tổng quan', icon: LayoutDashboard },
-    { id: 'users' as AdminPage, label: 'Quản lý Người dùng', icon: Users },
-    { id: 'classes' as AdminPage, label: 'Quản lý Lớp học', icon: GraduationCap },
-    { id: 'catalog' as AdminPage, label: 'Quản lý Chuyên mục', icon: BookOpen },
-    { id: 'reports' as AdminPage, label: 'Báo cáo & Thống kê', icon: BarChart3 },
-    { id: 'evaluation' as AdminPage, label: 'Đánh giá Chất lượng', icon: Star },
+    { id: 'dashboard' as AdminPage, label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'users' as AdminPage, label: 'User Management', icon: Users },
+    { id: 'classes' as AdminPage, label: 'Class Management', icon: GraduationCap },
+    { id: 'catalog' as AdminPage, label: 'Catalog Management', icon: BookOpen },
+    { id: 'reports' as AdminPage, label: 'Reports & Analytics', icon: BarChart3 },
+    { id: 'evaluation' as AdminPage, label: 'Quality Evaluation', icon: Star },
   ];
 
   const renderPage = () => {
@@ -53,7 +53,7 @@ export default function AdminLayout({ user, onLogout }: AdminLayoutProps) {
       <aside className="w-64 bg-white border-r border-gray-200 flex flex-col">
         <div className="p-6 border-b border-gray-200">
           <h2 className="text-sm text-gray-500">Portal</h2>
-          <p className="mt-1">Quản trị viên</p>
+          <p className="mt-1">Administrator</p>
         </div>
         
         <nav className="flex-1 p-4 space-y-1">
