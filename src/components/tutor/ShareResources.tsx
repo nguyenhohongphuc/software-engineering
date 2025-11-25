@@ -43,42 +43,42 @@ export default function ShareResources() {
   const [resources, setResources] = useState<Resource[]>([
     {
       id: 1,
-      title: 'Bài giảng Giải tích 2 - Chương 1',
+      title: 'Calculus 2 Lecture - Chapter 1',
       type: 'file',
-      subject: 'Giải tích 2',
+      subject: 'Calculus 2',
       uploadDate: '2025-10-25',
       url: '#',
-      description: 'Tài liệu về tích phân cơ bản'
+      description: 'Material on basic integration'
     },
     {
       id: 2,
-      title: 'Bài tập Giải tích 2 - Có lời giải',
+      title: 'Calculus 2 Exercises - With Solutions',
       type: 'file',
-      subject: 'Giải tích 2',
+      subject: 'Calculus 2',
       uploadDate: '2025-10-24',
       url: '#'
     },
     {
       id: 3,
-      title: 'Video hướng dẫn Ma trận',
+      title: 'Matrix Tutorial Video',
       type: 'link',
-      subject: 'Đại số tuyến tính',
+      subject: 'Linear Algebra',
       uploadDate: '2025-10-20',
       url: 'https://youtube.com/example',
-      description: 'Video giải thích chi tiết về ma trận'
+      description: 'Detailed video explaining matrices'
     }
   ]);
 
-  const subjects = ['Giải tích 2', 'Đại số tuyến tính', 'Toán rời rạc'];
+  const subjects = ['Calculus 2', 'Linear Algebra', 'Discrete Mathematics'];
 
   const handleAddResource = () => {
     if (!title || !subject) {
-      toast.error('Vui lòng điền đầy đủ thông tin');
+      toast.error('Please fill in all required information');
       return;
     }
 
     if (resourceType === 'link' && !url) {
-      toast.error('Vui lòng nhập URL');
+      toast.error('Please enter a URL');
       return;
     }
 
@@ -93,7 +93,7 @@ export default function ShareResources() {
     };
 
     setResources([...resources, newResource]);
-    toast.success('Đã thêm tài liệu thành công');
+    toast.success('Resource added successfully');
 
     // Reset form
     setTitle('');
@@ -105,21 +105,21 @@ export default function ShareResources() {
 
   const handleDeleteResource = (id: number) => {
     setResources(resources.filter(r => r.id !== id));
-    toast.success('Đã xóa tài liệu');
+    toast.success('Resource deleted');
   };
 
   return (
     <div className="p-6">
       <div className="flex items-start justify-between">
         <div>
-          <h1>Chia sẻ Tài liệu</h1>
+          <h1>Share Resources</h1>
           <p className="text-gray-600 mt-1">
-            Tải lên và chia sẻ tài liệu học tập với sinh viên
+            Upload and share learning materials with students
           </p>
         </div>
         <Button onClick={() => setDialogOpen(true)} className="bg-[#528DFF] hover:bg-[#3d7ae8]">
           <Plus className="mr-2 h-4 w-4" />
-          Thêm tài liệu
+          Add Resource
         </Button>
       </div>
 
@@ -149,7 +149,7 @@ export default function ShareResources() {
                           {resource.type === 'file' ? 'File' : 'Link'}
                         </Badge>
                         <span className="text-xs text-gray-500">
-                          Tải lên: {resource.uploadDate}
+                          Uploaded: {resource.uploadDate}
                         </span>
                       </div>
                       {resource.description && (
@@ -178,11 +178,11 @@ export default function ShareResources() {
             <CardContent className="p-12 text-center">
               <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-600 mb-4">
-                Bạn chưa chia sẻ tài liệu nào
+                You haven't shared any resources yet
               </p>
               <Button onClick={() => setDialogOpen(true)} className="bg-[#528DFF] hover:bg-[#3d7ae8]">
                 <Plus className="mr-2 h-4 w-4" />
-                Thêm tài liệu đầu tiên
+                Add Your First Resource
               </Button>
             </CardContent>
           </Card>
@@ -193,11 +193,11 @@ export default function ShareResources() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Thêm tài liệu mới</DialogTitle>
+            <DialogTitle>Add New Resource</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label>Loại tài liệu</Label>
+              <Label>Resource Type</Label>
               <div className="flex gap-4">
                 <Button
                   type="button"
@@ -206,7 +206,7 @@ export default function ShareResources() {
                   className={resourceType === 'file' ? 'bg-[#528DFF] hover:bg-[#3d7ae8]' : ''}
                 >
                   <Upload className="mr-2 h-4 w-4" />
-                  Tải lên file
+                  Upload File
                 </Button>
                 <Button
                   type="button"
@@ -215,26 +215,26 @@ export default function ShareResources() {
                   className={resourceType === 'link' ? 'bg-[#528DFF] hover:bg-[#3d7ae8]' : ''}
                 >
                   <LinkIcon className="mr-2 h-4 w-4" />
-                  Thêm link
+                  Add Link
                 </Button>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="title">Tiêu đề tài liệu</Label>
+              <Label htmlFor="title">Resource Title</Label>
               <Input
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Ví dụ: Bài giảng Giải tích 2 - Chương 1"
+                placeholder="e.g., Calculus 2 Lecture - Chapter 1"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="subject">Môn học</Label>
+              <Label htmlFor="subject">Subject</Label>
               <Select value={subject} onValueChange={setSubject}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Chọn môn học" />
+                  <SelectValue placeholder="Select subject" />
                 </SelectTrigger>
                 <SelectContent>
                   {subjects.map((subj) => (
@@ -248,14 +248,14 @@ export default function ShareResources() {
 
             {resourceType === 'file' ? (
               <div className="space-y-2">
-                <Label htmlFor="file">Chọn file</Label>
+                <Label htmlFor="file">Choose File</Label>
                 <Input
                   id="file"
                   type="file"
                   accept=".pdf,.doc,.docx,.ppt,.pptx"
                 />
                 <p className="text-xs text-gray-500">
-                  Hỗ trợ: PDF, Word, PowerPoint (Tối đa 10MB)
+                  Supported: PDF, Word, PowerPoint (Max 10MB)
                 </p>
               </div>
             ) : (
@@ -272,23 +272,23 @@ export default function ShareResources() {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="description">Mô tả (tùy chọn)</Label>
+              <Label htmlFor="description">Description (Optional)</Label>
               <Textarea
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Mô tả ngắn về tài liệu..."
+                placeholder="Brief description of the resource..."
                 rows={3}
               />
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>
-              Hủy
+              Cancel
             </Button>
             <Button onClick={handleAddResource} className="bg-[#528DFF] hover:bg-[#3d7ae8]">
               <Upload className="mr-2 h-4 w-4" />
-              Thêm tài liệu
+              Add Resource
             </Button>
           </DialogFooter>
         </DialogContent>

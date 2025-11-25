@@ -19,11 +19,11 @@ export default function Profile({ user }: ProfileProps) {
     name: user.name,
     email: user.email,
     phone: '0123456789',
-    address: 'Ký túc xá ĐHQG, Khu B, Đông Hòa, Dĩ An, Bình Dương',
+    address: 'HCMUT Dormitory, Zone B, Dong Hoa, Di An, Binh Duong',
     studentId: '2012345',
-    major: 'Khoa học Máy tính',
-    year: 'Năm 3',
-    bio: 'Tôi đang học năm 3 chuyên ngành Khoa học Máy tính. Tôi cần hỗ trợ về các môn Toán và Lập trình.'
+    major: 'Computer Science',
+    year: 'Year 3',
+    bio: 'I am a third-year Computer Science student. I need support in Mathematics and Programming courses.'
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -34,15 +34,15 @@ export default function Profile({ user }: ProfileProps) {
   };
 
   const handleSave = () => {
-    toast.success('Cập nhật hồ sơ thành công!');
+    toast.success('Profile updated successfully!');
     setIsEditing(false);
   };
 
   return (
     <div className="p-6">
       <div>
-        <h1>Hồ sơ cá nhân</h1>
-        <p className="text-gray-600 mt-1">Quản lý thông tin cá nhân của bạn</p>
+        <h1>Profile</h1>
+        <p className="text-gray-600 mt-1">Manage your personal information</p>
       </div>
 
       <div className="mt-6 max-w-4xl space-y-6">
@@ -58,7 +58,7 @@ export default function Profile({ user }: ProfileProps) {
               <div className="flex-1">
                 <h2>{formData.name}</h2>
                 <p className="text-gray-600 mt-1">{formData.major} - {formData.year}</p>
-                <p className="text-sm text-gray-500 mt-1">MSSV: {formData.studentId}</p>
+                <p className="text-sm text-gray-500 mt-1">Student ID: {formData.studentId}</p>
                 
                 <div className="flex gap-3 mt-4">
                   <Button
@@ -66,11 +66,11 @@ export default function Profile({ user }: ProfileProps) {
                     onClick={() => setIsEditing(!isEditing)}
                     className={!isEditing ? 'bg-[#528DFF] hover:bg-[#3d7ae8]' : ''}
                   >
-                    {isEditing ? 'Hủy chỉnh sửa' : 'Chỉnh sửa hồ sơ'}
+                    {isEditing ? 'Cancel Edit' : 'Edit Profile'}
                   </Button>
                   {isEditing && (
                     <Button onClick={handleSave} className="bg-green-600 hover:bg-green-700">
-                      Lưu thay đổi
+                      Save Changes
                     </Button>
                   )}
                 </div>
@@ -84,7 +84,7 @@ export default function Profile({ user }: ProfileProps) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <UserIcon className="h-5 w-5 text-[#528DFF]" />
-              Thông tin liên hệ
+              Contact Information
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -106,7 +106,7 @@ export default function Profile({ user }: ProfileProps) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phone">Số điện thoại</Label>
+                <Label htmlFor="phone">Phone Number</Label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
@@ -123,7 +123,7 @@ export default function Profile({ user }: ProfileProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="address">Địa chỉ</Label>
+              <Label htmlFor="address">Address</Label>
               <div className="relative">
                 <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
@@ -144,13 +144,13 @@ export default function Profile({ user }: ProfileProps) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BookOpen className="h-5 w-5 text-[#528DFF]" />
-              Thông tin học tập
+              Academic Information
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="studentId">Mã số sinh viên</Label>
+                <Label htmlFor="studentId">Student ID</Label>
                 <Input
                   id="studentId"
                   name="studentId"
@@ -161,7 +161,7 @@ export default function Profile({ user }: ProfileProps) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="major">Chuyên ngành</Label>
+                <Label htmlFor="major">Major</Label>
                 <Input
                   id="major"
                   name="major"
@@ -173,7 +173,7 @@ export default function Profile({ user }: ProfileProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="year">Năm học</Label>
+              <Label htmlFor="year">Academic Year</Label>
               <Input
                 id="year"
                 name="year"
@@ -184,7 +184,7 @@ export default function Profile({ user }: ProfileProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="bio">Giới thiệu bản thân</Label>
+              <Label htmlFor="bio">About Me</Label>
               <Textarea
                 id="bio"
                 name="bio"
@@ -192,7 +192,7 @@ export default function Profile({ user }: ProfileProps) {
                 onChange={handleChange}
                 disabled={!isEditing}
                 rows={4}
-                placeholder="Viết vài dòng về bản thân và mục tiêu học tập..."
+                placeholder="Write a few lines about yourself and your learning goals..."
               />
             </div>
           </CardContent>
@@ -203,22 +203,22 @@ export default function Profile({ user }: ProfileProps) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Calendar className="h-5 w-5 text-[#528DFF]" />
-              Thống kê học tập
+              Learning Statistics
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center p-4 bg-blue-50 rounded-lg">
                 <div className="text-3xl text-[#528DFF]">24</div>
-                <p className="text-sm text-gray-600 mt-1">Tổng giờ học</p>
+                <p className="text-sm text-gray-600 mt-1">Total Hours</p>
               </div>
               <div className="text-center p-4 bg-green-50 rounded-lg">
                 <div className="text-3xl text-green-600">12</div>
-                <p className="text-sm text-gray-600 mt-1">Buổi học hoàn thành</p>
+                <p className="text-sm text-gray-600 mt-1">Completed Sessions</p>
               </div>
               <div className="text-center p-4 bg-purple-50 rounded-lg">
                 <div className="text-3xl text-purple-600">5</div>
-                <p className="text-sm text-gray-600 mt-1">Môn học đang học</p>
+                <p className="text-sm text-gray-600 mt-1">Active Courses</p>
               </div>
             </div>
           </CardContent>

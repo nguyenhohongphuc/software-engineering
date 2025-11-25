@@ -51,25 +51,25 @@ export default function CatalogManagement() {
   const [skillCategory, setSkillCategory] = useState('');
 
   const [courses, setCourses] = useState<Course[]>([
-    { id: 1, code: 'MT1007', name: 'Giải tích 2', faculty: 'Toán - Tin học', credits: 4 },
-    { id: 2, code: 'MT2013', name: 'Đại số tuyến tính', faculty: 'Toán - Tin học', credits: 3 },
-    { id: 3, code: 'CO1027', name: 'Lập trình C++', faculty: 'Khoa học máy tính', credits: 4 },
-    { id: 4, code: 'CO2013', name: 'Hệ cơ sở dữ liệu', faculty: 'Khoa học máy tính', credits: 4 },
-    { id: 5, code: 'PH1007', name: 'Vật lý đại cương 2', faculty: 'Vật lý', credits: 4 },
+    { id: 1, code: 'MT1007', name: 'Calculus 2', faculty: 'Mathematics & CS', credits: 4 },
+    { id: 2, code: 'MT2013', name: 'Linear Algebra', faculty: 'Mathematics & CS', credits: 3 },
+    { id: 3, code: 'CO1027', name: 'C++ Programming', faculty: 'Computer Science', credits: 4 },
+    { id: 4, code: 'CO2013', name: 'Database Systems', faculty: 'Computer Science', credits: 4 },
+    { id: 5, code: 'PH1007', name: 'General Physics 2', faculty: 'Physics', credits: 4 },
   ]);
 
   const [skills, setSkills] = useState<Skill[]>([
-    { id: 1, name: 'Giải tích', category: 'Toán học' },
-    { id: 2, name: 'Đại số', category: 'Toán học' },
-    { id: 3, name: 'Lập trình C++', category: 'Lập trình' },
-    { id: 4, name: 'Python', category: 'Lập trình' },
-    { id: 5, name: 'SQL', category: 'Cơ sở dữ liệu' },
-    { id: 6, name: 'IELTS', category: 'Ngoại ngữ' },
+    { id: 1, name: 'Calculus', category: 'Mathematics' },
+    { id: 2, name: 'Algebra', category: 'Mathematics' },
+    { id: 3, name: 'C++ Programming', category: 'Programming' },
+    { id: 4, name: 'Python', category: 'Programming' },
+    { id: 5, name: 'SQL', category: 'Database' },
+    { id: 6, name: 'IELTS', category: 'Foreign Language' },
   ]);
 
   const handleAddCourse = () => {
     if (!courseCode || !courseName || !faculty || !credits) {
-      toast.error('Vui lòng điền đầy đủ thông tin');
+      toast.error('Please fill in all information');
       return;
     }
 
@@ -82,7 +82,7 @@ export default function CatalogManagement() {
     };
 
     setCourses([...courses, newCourse]);
-    toast.success('Đã thêm môn học mới');
+    toast.success('Course added successfully');
 
     // Reset form
     setCourseCode('');
@@ -94,12 +94,12 @@ export default function CatalogManagement() {
 
   const handleDeleteCourse = (id: number) => {
     setCourses(courses.filter(c => c.id !== id));
-    toast.success('Đã xóa môn học');
+    toast.success('Course deleted');
   };
 
   const handleAddSkill = () => {
     if (!skillName || !skillCategory) {
-      toast.error('Vui lòng điền đầy đủ thông tin');
+      toast.error('Please fill in all information');
       return;
     }
 
@@ -110,7 +110,7 @@ export default function CatalogManagement() {
     };
 
     setSkills([...skills, newSkill]);
-    toast.success('Đã thêm kỹ năng mới');
+    toast.success('Skill added successfully');
 
     // Reset form
     setSkillName('');
@@ -120,15 +120,15 @@ export default function CatalogManagement() {
 
   const handleDeleteSkill = (id: number) => {
     setSkills(skills.filter(s => s.id !== id));
-    toast.success('Đã xóa kỹ năng');
+    toast.success('Skill deleted');
   };
 
   return (
     <div className="p-6">
       <div>
-        <h1>Quản lý Chuyên mục</h1>
+        <h1>Catalog Management</h1>
         <p className="text-gray-600 mt-1">
-          Quản lý danh sách môn học và kỹ năng trong hệ thống
+          Manage courses and skills in the system
         </p>
       </div>
 
@@ -137,11 +137,11 @@ export default function CatalogManagement() {
           <TabsList>
             <TabsTrigger value="courses">
               <BookOpen className="h-4 w-4 mr-2" />
-              Môn học
+              Courses
             </TabsTrigger>
             <TabsTrigger value="skills">
               <Award className="h-4 w-4 mr-2" />
-              Kỹ năng
+              Skills
             </TabsTrigger>
           </TabsList>
 
@@ -149,20 +149,20 @@ export default function CatalogManagement() {
           <TabsContent value="courses" className="space-y-6">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>Danh sách môn học</CardTitle>
+                <CardTitle>Course List</CardTitle>
                 <Button onClick={() => setCourseDialogOpen(true)} className="bg-[#528DFF] hover:bg-[#3d7ae8]">
                   <Plus className="mr-2 h-4 w-4" />
-                  Thêm môn học
+                  Add Course
                 </Button>
               </CardHeader>
               <CardContent className="p-0">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Mã môn học</TableHead>
-                      <TableHead>Tên môn học</TableHead>
-                      <TableHead>Khoa</TableHead>
-                      <TableHead>Tín chỉ</TableHead>
+                      <TableHead>Course Code</TableHead>
+                      <TableHead>Course Name</TableHead>
+                      <TableHead>Faculty</TableHead>
+                      <TableHead>Credits</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -184,18 +184,18 @@ export default function CatalogManagement() {
           <TabsContent value="skills" className="space-y-6">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>Danh sách kỹ năng</CardTitle>
+                <CardTitle>Skills List</CardTitle>
                 <Button onClick={() => setSkillDialogOpen(true)} className="bg-[#528DFF] hover:bg-[#3d7ae8]">
                   <Plus className="mr-2 h-4 w-4" />
-                  Thêm kỹ năng
+                  Add Skill
                 </Button>
               </CardHeader>
               <CardContent className="p-0">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Tên kỹ năng</TableHead>
-                      <TableHead>Danh mục</TableHead>
+                      <TableHead>Skill Name</TableHead>
+                      <TableHead>Category</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -217,41 +217,41 @@ export default function CatalogManagement() {
       <Dialog open={courseDialogOpen} onOpenChange={setCourseDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Thêm môn học mới</DialogTitle>
+            <DialogTitle>Add New Course</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="courseCode">Mã môn học</Label>
+              <Label htmlFor="courseCode">Course Code</Label>
               <Input
                 id="courseCode"
                 value={courseCode}
                 onChange={(e) => setCourseCode(e.target.value)}
-                placeholder="Ví dụ: MT1007"
+                placeholder="Example: MT1007"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="courseName">Tên môn học</Label>
+              <Label htmlFor="courseName">Course Name</Label>
               <Input
                 id="courseName"
                 value={courseName}
                 onChange={(e) => setCourseName(e.target.value)}
-                placeholder="Ví dụ: Giải tích 2"
+                placeholder="Example: Calculus 2"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="faculty">Khoa</Label>
+              <Label htmlFor="faculty">Faculty</Label>
               <Input
                 id="faculty"
                 value={faculty}
                 onChange={(e) => setFaculty(e.target.value)}
-                placeholder="Ví dụ: Toán - Tin học"
+                placeholder="Example: Mathematics & CS"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="credits">Số tín chỉ</Label>
+              <Label htmlFor="credits">Credits</Label>
               <Input
                 id="credits"
                 type="number"
@@ -264,11 +264,11 @@ export default function CatalogManagement() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCourseDialogOpen(false)}>
-              Hủy
+              Cancel
             </Button>
             <Button onClick={handleAddCourse} className="bg-[#528DFF] hover:bg-[#3d7ae8]">
               <Plus className="mr-2 h-4 w-4" />
-              Thêm môn học
+              Add Course
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -278,36 +278,36 @@ export default function CatalogManagement() {
       <Dialog open={skillDialogOpen} onOpenChange={setSkillDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Thêm kỹ năng mới</DialogTitle>
+            <DialogTitle>Add New Skill</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="skillName">Tên kỹ năng</Label>
+              <Label htmlFor="skillName">Skill Name</Label>
               <Input
                 id="skillName"
                 value={skillName}
                 onChange={(e) => setSkillName(e.target.value)}
-                placeholder="Ví dụ: Python"
+                placeholder="Example: Python"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="skillCategory">Danh mục</Label>
+              <Label htmlFor="skillCategory">Category</Label>
               <Input
                 id="skillCategory"
                 value={skillCategory}
                 onChange={(e) => setSkillCategory(e.target.value)}
-                placeholder="Ví dụ: Lập trình"
+                placeholder="Example: Programming"
               />
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setSkillDialogOpen(false)}>
-              Hủy
+              Cancel
             </Button>
             <Button onClick={handleAddSkill} className="bg-[#528DFF] hover:bg-[#3d7ae8]">
               <Plus className="mr-2 h-4 w-4" />
-              Thêm kỹ năng
+              Add Skill
             </Button>
           </DialogFooter>
         </DialogContent>

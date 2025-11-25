@@ -20,12 +20,12 @@ export default function TutorLayout({ user, onLogout }: TutorLayoutProps) {
   const [currentPage, setCurrentPage] = useState<TutorPage>('dashboard');
 
   const menuItems = [
-    { id: 'dashboard' as TutorPage, label: 'Trang chủ', icon: Home },
-    { id: 'schedule' as TutorPage, label: 'Lịch của tôi', icon: Calendar },
-    { id: 'tutoring' as TutorPage, label: 'Quản lý giảng dạy', icon: BookOpen },
-    { id: 'students' as TutorPage, label: 'Sinh viên của tôi', icon: Users },
-    { id: 'resources' as TutorPage, label: 'Chia sẻ Tài liệu', icon: FileText },
-    { id: 'profile' as TutorPage, label: 'Hồ sơ cá nhân', icon: User },
+    { id: 'dashboard' as TutorPage, label: 'Dashboard', icon: Home },
+    { id: 'schedule' as TutorPage, label: 'My Schedule', icon: Calendar },
+    { id: 'tutoring' as TutorPage, label: 'Tutoring Management', icon: BookOpen },
+    { id: 'students' as TutorPage, label: 'My Students', icon: Users },
+    { id: 'resources' as TutorPage, label: 'Share Resources', icon: FileText },
+    { id: 'profile' as TutorPage, label: 'Profile', icon: User },
   ];
 
   const renderPage = () => {
@@ -53,7 +53,7 @@ export default function TutorLayout({ user, onLogout }: TutorLayoutProps) {
       <aside className="w-64 bg-white border-r border-gray-200 flex flex-col">
         <div className="p-6 border-b border-gray-200">
           <h2 className="text-sm text-gray-500">Portal</h2>
-          <p className="mt-1">Gia sư</p>
+          <p className="mt-1">Tutor</p>
         </div>
         
         <nav className="flex-1 p-4 space-y-1">

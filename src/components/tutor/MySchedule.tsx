@@ -33,9 +33,9 @@ export default function MySchedule() {
   const sessions: Session[] = [
     {
       id: 1,
-      student: 'Nguyễn Văn A',
+      student: 'Nguyen Van A',
       studentAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop',
-      subject: 'Giải tích 2',
+      subject: 'Calculus 2',
       date: '2025-10-30',
       time: '14:00 - 16:00',
       location: 'Google Meet',
@@ -45,20 +45,20 @@ export default function MySchedule() {
     },
     {
       id: 2,
-      student: 'Trần Thị C',
+      student: 'Tran Thi C',
       studentAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop',
-      subject: 'Đại số tuyến tính',
+      subject: 'Linear Algebra',
       date: '2025-10-31',
       time: '09:00 - 11:00',
-      location: 'Phòng H1-101',
+      location: 'Room H1-101',
       type: 'offline',
       status: 'upcoming'
     },
     {
       id: 3,
-      student: 'Lê Văn B',
+      student: 'Le Van B',
       studentAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
-      subject: 'Toán rời rạc',
+      subject: 'Discrete Mathematics',
       date: '2025-10-25',
       time: '14:00 - 16:00',
       location: 'Zoom',
@@ -67,12 +67,12 @@ export default function MySchedule() {
     },
     {
       id: 4,
-      student: 'Phạm Thị D',
+      student: 'Pham Thi D',
       studentAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop',
-      subject: 'Giải tích 2',
+      subject: 'Calculus 2',
       date: '2025-10-23',
       time: '10:00 - 12:00',
-      location: 'Phòng H6-202',
+      location: 'Room H6-202',
       type: 'offline',
       status: 'completed'
     }
@@ -99,10 +99,10 @@ export default function MySchedule() {
             <div className="flex items-start justify-between">
               <div>
                 <h3 className="text-sm">{session.subject}</h3>
-                <p className="text-sm text-gray-600 mt-1">Sinh viên: {session.student}</p>
+                <p className="text-sm text-gray-600 mt-1">Student: {session.student}</p>
               </div>
               <Badge variant={session.status === 'upcoming' ? 'default' : 'secondary'}>
-                {session.status === 'upcoming' ? 'Sắp tới' : 'Đã hoàn thành'}
+                {session.status === 'upcoming' ? 'Upcoming' : 'Completed'}
               </Badge>
             </div>
 
@@ -132,7 +132,7 @@ export default function MySchedule() {
                   onClick={() => window.open(session.meetLink, '_blank')}
                 >
                   <Video className="mr-2 h-4 w-4" />
-                  Tham gia học
+                  Join Session
                 </Button>
               )}
               <Button 
@@ -141,7 +141,7 @@ export default function MySchedule() {
                 className={session.status === 'upcoming' ? 'bg-[#528DFF] hover:bg-[#3d7ae8]' : ''}
               >
                 <CheckCircle className="mr-2 h-4 w-4" />
-                {session.status === 'upcoming' ? 'Quản lý buổi học' : 'Xem chi tiết'}
+                {session.status === 'upcoming' ? 'Manage Session' : 'View Details'}
               </Button>
             </div>
           </div>
@@ -153,18 +153,18 @@ export default function MySchedule() {
   return (
     <div className="p-6">
       <div>
-        <h1>Lịch của tôi</h1>
-        <p className="text-gray-600 mt-1">Quản lý các buổi học đã đặt</p>
+        <h1>My Schedule</h1>
+        <p className="text-gray-600 mt-1">Manage your scheduled sessions</p>
       </div>
 
       <div className="mt-6">
         <Tabs defaultValue="upcoming" className="space-y-4">
           <TabsList>
             <TabsTrigger value="upcoming">
-              Sắp tới ({upcomingSessions.length})
+              Upcoming ({upcomingSessions.length})
             </TabsTrigger>
             <TabsTrigger value="completed">
-              Đã hoàn thành ({completedSessions.length})
+              Completed ({completedSessions.length})
             </TabsTrigger>
           </TabsList>
 
@@ -175,7 +175,7 @@ export default function MySchedule() {
               <Card>
                 <CardContent className="p-12 text-center">
                   <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600">Bạn chưa có buổi học nào sắp tới</p>
+                  <p className="text-gray-600">You have no upcoming sessions</p>
                 </CardContent>
               </Card>
             )}
@@ -187,7 +187,7 @@ export default function MySchedule() {
             ) : (
               <Card>
                 <CardContent className="p-12 text-center">
-                  <p className="text-gray-600">Chưa có buổi học nào được hoàn thành</p>
+                  <p className="text-gray-600">No completed sessions yet</p>
                 </CardContent>
               </Card>
             )}
@@ -199,7 +199,7 @@ export default function MySchedule() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Quản lý buổi học</DialogTitle>
+            <DialogTitle>Manage Session</DialogTitle>
           </DialogHeader>
           {selectedSession && (
             <ManageSession session={selectedSession} onClose={() => setDialogOpen(false)} />

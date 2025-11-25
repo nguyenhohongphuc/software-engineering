@@ -19,9 +19,9 @@ export default function UpdateProfile({ user }: UpdateProfileProps) {
     name: user.name,
     email: user.email,
     phone: '0987654321',
-    experience: '3 năm kinh nghiệm giảng dạy',
-    bio: 'Tôi là sinh viên năm cuối chuyên ngành Toán học. Tôi đã có 3 năm kinh nghiệm làm gia sư và đã giúp nhiều sinh viên đạt điểm cao trong các kỳ thi. Phương pháp giảng dạy của tôi tập trung vào việc giúp sinh viên hiểu bản chất vấn đề thay vì học vẹt.',
-    specialization: 'Toán học, Giải tích, Đại số'
+    experience: '3 years of teaching experience',
+    bio: 'I am a final-year student majoring in Mathematics. I have 3 years of tutoring experience and have helped many students achieve high grades in exams. My teaching method focuses on helping students understand the essence of problems rather than rote learning.',
+    specialization: 'Mathematics, Calculus, Algebra'
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -32,15 +32,15 @@ export default function UpdateProfile({ user }: UpdateProfileProps) {
   };
 
   const handleSave = () => {
-    toast.success('Cập nhật hồ sơ thành công!');
+    toast.success('Profile updated successfully!');
     setIsEditing(false);
   };
 
   return (
     <div className="p-6">
       <div>
-        <h1>Hồ sơ cá nhân</h1>
-        <p className="text-gray-600 mt-1">Cập nhật thông tin hồ sơ gia sư của bạn</p>
+        <h1>Profile</h1>
+        <p className="text-gray-600 mt-1">Update your tutor profile information</p>
       </div>
 
       <div className="mt-6 max-w-4xl space-y-6">
@@ -64,12 +64,12 @@ export default function UpdateProfile({ user }: UpdateProfileProps) {
                     onClick={() => setIsEditing(!isEditing)}
                     className={!isEditing ? 'bg-[#528DFF] hover:bg-[#3d7ae8]' : ''}
                   >
-                    {isEditing ? 'Hủy chỉnh sửa' : 'Chỉnh sửa hồ sơ'}
+                    {isEditing ? 'Cancel Editing' : 'Edit Profile'}
                   </Button>
                   {isEditing && (
                     <Button onClick={handleSave} className="bg-green-600 hover:bg-green-700">
                       <Save className="mr-2 h-4 w-4" />
-                      Lưu thay đổi
+                      Save Changes
                     </Button>
                   )}
                 </div>
@@ -83,13 +83,13 @@ export default function UpdateProfile({ user }: UpdateProfileProps) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <UserIcon className="h-5 w-5 text-[#528DFF]" />
-              Thông tin liên hệ
+              Contact Information
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Họ và tên</Label>
+                <Label htmlFor="name">Full Name</Label>
                 <Input
                   id="name"
                   name="name"
@@ -100,7 +100,7 @@ export default function UpdateProfile({ user }: UpdateProfileProps) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phone">Số điện thoại</Label>
+                <Label htmlFor="phone">Phone Number</Label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
@@ -138,36 +138,36 @@ export default function UpdateProfile({ user }: UpdateProfileProps) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Award className="h-5 w-5 text-[#528DFF]" />
-              Thông tin giảng dạy
+              Teaching Information
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="experience">Kinh nghiệm</Label>
+              <Label htmlFor="experience">Experience</Label>
               <Input
                 id="experience"
                 name="experience"
                 value={formData.experience}
                 onChange={handleChange}
                 disabled={!isEditing}
-                placeholder="Ví dụ: 3 năm kinh nghiệm giảng dạy"
+                placeholder="e.g., 3 years of teaching experience"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="specialization">Chuyên môn</Label>
+              <Label htmlFor="specialization">Specialization</Label>
               <Input
                 id="specialization"
                 name="specialization"
                 value={formData.specialization}
                 onChange={handleChange}
                 disabled={!isEditing}
-                placeholder="Ví dụ: Toán học, Giải tích, Đại số"
+                placeholder="e.g., Mathematics, Calculus, Algebra"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="bio">Giới thiệu bản thân</Label>
+              <Label htmlFor="bio">About Yourself</Label>
               <Textarea
                 id="bio"
                 name="bio"
@@ -175,7 +175,7 @@ export default function UpdateProfile({ user }: UpdateProfileProps) {
                 onChange={handleChange}
                 disabled={!isEditing}
                 rows={5}
-                placeholder="Viết vài dòng về bản thân, kinh nghiệm và phương pháp giảng dạy..."
+                placeholder="Write a few lines about yourself, your experience and teaching methods..."
               />
             </div>
           </CardContent>
@@ -184,21 +184,21 @@ export default function UpdateProfile({ user }: UpdateProfileProps) {
         {/* Statistics */}
         <Card>
           <CardHeader>
-            <CardTitle>Thống kê giảng dạy</CardTitle>
+            <CardTitle>Teaching Statistics</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center p-4 bg-blue-50 rounded-lg">
                 <div className="text-3xl text-[#528DFF]">48</div>
-                <p className="text-sm text-gray-600 mt-1">Tổng giờ dạy</p>
+                <p className="text-sm text-gray-600 mt-1">Total Teaching Hours</p>
               </div>
               <div className="text-center p-4 bg-green-50 rounded-lg">
                 <div className="text-3xl text-green-600">4.8</div>
-                <p className="text-sm text-gray-600 mt-1">Đánh giá trung bình</p>
+                <p className="text-sm text-gray-600 mt-1">Average Rating</p>
               </div>
               <div className="text-center p-4 bg-purple-50 rounded-lg">
                 <div className="text-3xl text-purple-600">4</div>
-                <p className="text-sm text-gray-600 mt-1">Sinh viên đang dạy</p>
+                <p className="text-sm text-gray-600 mt-1">Current Students</p>
               </div>
             </div>
           </CardContent>

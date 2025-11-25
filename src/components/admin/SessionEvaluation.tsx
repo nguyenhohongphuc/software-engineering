@@ -35,62 +35,62 @@ export default function SessionEvaluation() {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([
     {
       id: 1,
-      student: 'Nguyễn Văn A',
+      student: 'Nguyen Van A',
       studentAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop',
-      tutor: 'Trần Thị B',
+      tutor: 'Tran Thi B',
       tutorAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop',
-      subject: 'Giải tích 2',
+      subject: 'Calculus 2',
       date: '2025-10-25',
       rating: 5,
-      comment: 'Gia sư giảng dạy rất dễ hiểu, nhiệt tình. Em đã hiểu rõ hơn về tích phân.',
+      comment: 'The tutor explained very clearly and was enthusiastic. I now understand integrals much better.',
       status: 'reviewed'
     },
     {
       id: 2,
-      student: 'Trần Thị C',
+      student: 'Tran Thi C',
       studentAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop',
-      tutor: 'Nguyễn Văn D',
+      tutor: 'Nguyen Van D',
       tutorAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop',
-      subject: 'Lập trình C++',
+      subject: 'C++ Programming',
       date: '2025-10-24',
       rating: 2,
-      comment: 'Gia sư đến muộn 15 phút và giảng dạy không rõ ràng. Em vẫn chưa hiểu bài.',
+      comment: 'Tutor arrived 15 minutes late and the teaching was not clear. I still don\'t understand the material.',
       status: 'action-required'
     },
     {
       id: 3,
-      student: 'Lê Văn B',
+      student: 'Le Van B',
       studentAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
-      tutor: 'Lê Thị E',
+      tutor: 'Le Thi E',
       tutorAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop',
-      subject: 'Vật lý đại cương',
+      subject: 'General Physics',
       date: '2025-10-23',
       rating: 4,
-      comment: 'Buổi học tốt, gia sư giải thích kỹ càng. Tuy nhiên có một số chỗ còn khó hiểu.',
+      comment: 'Good session, tutor explained thoroughly. However, some parts were still difficult to understand.',
       status: 'pending'
     },
     {
       id: 4,
-      student: 'Phạm Thị D',
+      student: 'Pham Thi D',
       studentAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop',
-      tutor: 'Trần Thị B',
+      tutor: 'Tran Thi B',
       tutorAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop',
-      subject: 'Giải tích 2',
+      subject: 'Calculus 2',
       date: '2025-10-22',
       rating: 5,
-      comment: 'Xuất sắc! Gia sư rất tận tâm và có phương pháp giảng dạy hiệu quả.',
+      comment: 'Excellent! The tutor is very dedicated and has an effective teaching method.',
       status: 'reviewed'
     },
     {
       id: 5,
-      student: 'Hoàng Văn E',
+      student: 'Hoang Van E',
       studentAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
-      tutor: 'Phạm Văn F',
+      tutor: 'Pham Van F',
       tutorAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
-      subject: 'Cơ sở dữ liệu',
+      subject: 'Database Systems',
       date: '2025-10-21',
       rating: 3,
-      comment: 'Buổi học bình thường, không có gì đặc biệt.',
+      comment: 'Average session, nothing special.',
       status: 'pending'
     }
   ]);
@@ -108,7 +108,7 @@ export default function SessionEvaluation() {
     setFeedbacks(feedbacks.map(f => 
       f.id === id ? { ...f, status: 'reviewed' as const } : f
     ));
-    toast.success('Đã đánh dấu phản hồi là đã xem xét');
+    toast.success('Feedback marked as reviewed');
     setDialogOpen(false);
   };
 
@@ -116,7 +116,7 @@ export default function SessionEvaluation() {
     setFeedbacks(feedbacks.map(f => 
       f.id === id ? { ...f, status: 'action-required' as const } : f
     ));
-    toast.warning('Đã đánh dấu phản hồi cần hành động');
+    toast.warning('Feedback marked as requiring action');
     setDialogOpen(false);
   };
 
@@ -148,7 +148,7 @@ export default function SessionEvaluation() {
               </Avatar>
               <div>
                 <h3 className="text-sm">{feedback.student}</h3>
-                <p className="text-sm text-gray-600">Đánh giá: {feedback.tutor}</p>
+                <p className="text-sm text-gray-600">Rating: {feedback.tutor}</p>
                 <div className="flex items-center gap-2 mt-1">
                   <Badge variant="outline" className="text-xs">{feedback.subject}</Badge>
                   <span className="text-xs text-gray-500">{feedback.date}</span>
@@ -171,7 +171,7 @@ export default function SessionEvaluation() {
               onClick={() => handleViewDetails(feedback)}
             >
               <Eye className="mr-2 h-4 w-4" />
-              Xem chi tiết
+              View Details
             </Button>
             {feedback.status === 'pending' && (
               <>
@@ -181,7 +181,7 @@ export default function SessionEvaluation() {
                   className="bg-green-600 hover:bg-green-700"
                 >
                   <CheckCircle className="mr-2 h-4 w-4" />
-                  Đã xem xét
+                  Mark Reviewed
                 </Button>
                 <Button
                   size="sm"
@@ -189,7 +189,7 @@ export default function SessionEvaluation() {
                   variant="destructive"
                 >
                   <Flag className="mr-2 h-4 w-4" />
-                  Cần hành động
+                  Needs Action
                 </Button>
               </>
             )}
@@ -205,9 +205,9 @@ export default function SessionEvaluation() {
   return (
     <div className="p-6">
       <div>
-        <h1>Đánh giá Chất lượng</h1>
+        <h1>Quality Evaluation</h1>
         <p className="text-gray-600 mt-1">
-          Xem xét phản hồi của sinh viên về các buổi học
+          Review student feedback on tutoring sessions
         </p>
       </div>
 
@@ -217,7 +217,7 @@ export default function SessionEvaluation() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Tổng phản hồi</p>
+                <p className="text-sm text-gray-600">Total Feedback</p>
                 <p className="text-2xl mt-1">{feedbacks.length}</p>
               </div>
               <Star className="h-8 w-8 text-yellow-400 fill-yellow-400" />
@@ -229,7 +229,7 @@ export default function SessionEvaluation() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Đánh giá TB</p>
+                <p className="text-sm text-gray-600">Avg. Rating</p>
                 <p className="text-2xl mt-1">{averageRating} ⭐</p>
               </div>
               <div className="text-2xl">📊</div>
@@ -241,7 +241,7 @@ export default function SessionEvaluation() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Chờ xem xét</p>
+                <p className="text-sm text-gray-600">Pending Review</p>
                 <p className="text-2xl mt-1">{pendingFeedbacks.length}</p>
               </div>
               <AlertCircle className="h-8 w-8 text-orange-500" />
@@ -253,7 +253,7 @@ export default function SessionEvaluation() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Cần hành động</p>
+                <p className="text-sm text-gray-600">Action Required</p>
                 <p className="text-2xl mt-1">{actionRequiredFeedbacks.length}</p>
               </div>
               <Flag className="h-8 w-8 text-red-500" />
@@ -267,13 +267,13 @@ export default function SessionEvaluation() {
         <Tabs defaultValue="pending">
           <TabsList>
             <TabsTrigger value="pending">
-              Chờ xem xét ({pendingFeedbacks.length})
+              Pending Review ({pendingFeedbacks.length})
             </TabsTrigger>
             <TabsTrigger value="action-required">
-              Cần hành động ({actionRequiredFeedbacks.length})
+              Action Required ({actionRequiredFeedbacks.length})
             </TabsTrigger>
             <TabsTrigger value="reviewed">
-              Đã xem xét ({reviewedFeedbacks.length})
+              Reviewed ({reviewedFeedbacks.length})
             </TabsTrigger>
           </TabsList>
 
@@ -284,7 +284,7 @@ export default function SessionEvaluation() {
               <Card>
                 <CardContent className="p-12 text-center">
                   <CheckCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600">Không có phản hồi chờ xem xét</p>
+                  <p className="text-gray-600">No pending feedback</p>
                 </CardContent>
               </Card>
             )}
@@ -297,7 +297,7 @@ export default function SessionEvaluation() {
               <Card>
                 <CardContent className="p-12 text-center">
                   <CheckCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600">Không có phản hồi cần hành động</p>
+                  <p className="text-gray-600">No feedback requiring action</p>
                 </CardContent>
               </Card>
             )}
@@ -309,7 +309,7 @@ export default function SessionEvaluation() {
             ) : (
               <Card>
                 <CardContent className="p-12 text-center">
-                  <p className="text-gray-600">Chưa có phản hồi nào được xem xét</p>
+                  <p className="text-gray-600">No reviewed feedback yet</p>
                 </CardContent>
               </Card>
             )}
@@ -321,13 +321,13 @@ export default function SessionEvaluation() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Chi tiết phản hồi</DialogTitle>
+            <DialogTitle>Feedback Details</DialogTitle>
           </DialogHeader>
           {selectedFeedback && (
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-gray-600">Sinh viên</p>
+                  <p className="text-sm text-gray-600">Student</p>
                   <div className="flex items-center gap-2 mt-1">
                     <Avatar className="h-8 w-8">
                       <AvatarImage src={selectedFeedback.studentAvatar} alt={selectedFeedback.student} />
@@ -337,7 +337,7 @@ export default function SessionEvaluation() {
                   </div>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Gia sư</p>
+                  <p className="text-sm text-gray-600">Tutor</p>
                   <div className="flex items-center gap-2 mt-1">
                     <Avatar className="h-8 w-8">
                       <AvatarImage src={selectedFeedback.tutorAvatar} alt={selectedFeedback.tutor} />
@@ -349,33 +349,33 @@ export default function SessionEvaluation() {
               </div>
 
               <div>
-                <p className="text-sm text-gray-600">Môn học</p>
+                <p className="text-sm text-gray-600">Subject</p>
                 <p className="mt-1">{selectedFeedback.subject}</p>
               </div>
 
               <div>
-                <p className="text-sm text-gray-600">Ngày học</p>
+                <p className="text-sm text-gray-600">Session Date</p>
                 <p className="mt-1">{selectedFeedback.date}</p>
               </div>
 
               <div>
-                <p className="text-sm text-gray-600">Đánh giá</p>
+                <p className="text-sm text-gray-600">Rating</p>
                 <div className="mt-1">{renderStars(selectedFeedback.rating)}</div>
               </div>
 
               <div>
-                <p className="text-sm text-gray-600">Nhận xét</p>
+                <p className="text-sm text-gray-600">Comment</p>
                 <div className="mt-1 p-3 bg-gray-50 rounded-lg">
                   <p className="text-sm">{selectedFeedback.comment}</p>
                 </div>
               </div>
 
               <div>
-                <p className="text-sm text-gray-600">Ghi chú của Admin</p>
+                <p className="text-sm text-gray-600">Admin Note</p>
                 <Textarea
                   value={adminNote}
                   onChange={(e) => setAdminNote(e.target.value)}
-                  placeholder="Thêm ghi chú nội bộ..."
+                  placeholder="Add internal notes..."
                   rows={3}
                   className="mt-1"
                 />
@@ -388,7 +388,7 @@ export default function SessionEvaluation() {
                     className="bg-green-600 hover:bg-green-700"
                   >
                     <CheckCircle className="mr-2 h-4 w-4" />
-                    Đánh dấu đã xem xét
+                    Mark as Reviewed
                   </Button>
                 )}
                 {selectedFeedback.status !== 'action-required' && (
@@ -397,7 +397,7 @@ export default function SessionEvaluation() {
                     variant="destructive"
                   >
                     <Flag className="mr-2 h-4 w-4" />
-                    Đánh dấu cần hành động
+                    Mark as Action Required
                   </Button>
                 )}
               </div>

@@ -46,12 +46,12 @@ export default function TutoringSetup() {
 
   // Available subjects
   const [subjects, setSubjects] = useState<Subject[]>([
-    { id: '1', name: 'Giải tích 2', code: 'MT1007', registered: true },
-    { id: '2', name: 'Đại số tuyến tính', code: 'MT1003', registered: true },
-    { id: '3', name: 'Toán rời rạc', code: 'MT1013', registered: true },
-    { id: '4', name: 'Xác suất thống kê', code: 'MT2013', registered: false },
-    { id: '5', name: 'Giải tích 3', code: 'MT2007', registered: false },
-    { id: '6', name: 'Phương trình vi phân', code: 'MT2015', registered: false },
+    { id: '1', name: 'Calculus 2', code: 'MT1007', registered: true },
+    { id: '2', name: 'Linear Algebra', code: 'MT1003', registered: true },
+    { id: '3', name: 'Discrete Mathematics', code: 'MT1013', registered: true },
+    { id: '4', name: 'Probability & Statistics', code: 'MT2013', registered: false },
+    { id: '5', name: 'Calculus 3', code: 'MT2007', registered: false },
+    { id: '6', name: 'Differential Equations', code: 'MT2015', registered: false },
   ]);
 
   // Time slots with subjects
@@ -59,26 +59,26 @@ export default function TutoringSetup() {
     {
       id: 1,
       date: '2025-11-30',
-      dayOfWeek: 'Chủ Nhật',
+      dayOfWeek: 'Sunday',
       startTime: '08:00',
       endTime: '10:00',
       status: 'available',
-      subjects: ['1', '2'] // Giải tích 2, Đại số tuyến tính
+      subjects: ['1', '2'] // Calculus 2, Linear Algebra
     },
     {
       id: 2,
       date: '2025-11-30',
-      dayOfWeek: 'Chủ Nhật',
+      dayOfWeek: 'Sunday',
       startTime: '14:00',
       endTime: '16:00',
       status: 'booked',
       subjects: ['1'],
-      studentName: 'Nguyễn Văn A'
+      studentName: 'Nguyen Van A'
     },
     {
       id: 3,
       date: '2025-12-01',
-      dayOfWeek: 'Thứ Hai',
+      dayOfWeek: 'Monday',
       startTime: '09:00',
       endTime: '11:00',
       status: 'available',
@@ -87,7 +87,7 @@ export default function TutoringSetup() {
     {
       id: 4,
       date: '2025-12-01',
-      dayOfWeek: 'Thứ Hai',
+      dayOfWeek: 'Monday',
       startTime: '15:00',
       endTime: '17:00',
       status: 'available',
@@ -111,28 +111,28 @@ export default function TutoringSetup() {
 
   const handleAddSlot = () => {
     if (!selectedDate || !startTime || !endTime) {
-      toast.error('Vui lòng điền đầy đủ thông tin');
+      toast.error('Please fill in all information');
       return;
     }
 
     if (startTime >= endTime) {
-      toast.error('Thời gian kết thúc phải sau thời gian bắt đầu');
+      toast.error('End time must be after start time');
       return;
     }
 
     if (selectedSubjectsForSlot.length === 0) {
-      toast.error('Vui lòng chọn ít nhất một môn học');
+      toast.error('Please select at least one subject');
       return;
     }
 
     const dayOfWeekMap: { [key: string]: string } = {
-      '0': 'Chủ Nhật',
-      '1': 'Thứ Hai',
-      '2': 'Thứ Ba',
-      '3': 'Thứ Tư',
-      '4': 'Thứ Năm',
-      '5': 'Thứ Sáu',
-      '6': 'Thứ Bảy'
+      '0': 'Sunday',
+      '1': 'Monday',
+      '2': 'Tuesday',
+      '3': 'Wednesday',
+      '4': 'Thursday',
+      '5': 'Friday',
+      '6': 'Saturday'
     };
 
     const date = new Date(selectedDate);
@@ -149,7 +149,7 @@ export default function TutoringSetup() {
     };
 
     setTimeSlots([...timeSlots, newSlot]);
-    toast.success('Đã thêm khe thời gian rảnh mới');
+    toast.success('New time slot added successfully');
     
     // Reset form
     setSelectedDate('');
@@ -162,12 +162,12 @@ export default function TutoringSetup() {
   const handleDeleteSlot = (id: number) => {
     const slot = timeSlots.find(s => s.id === id);
     if (slot?.status === 'booked') {
-      toast.error('Không thể xóa khe thời gian đã được đặt');
+      toast.error('Cannot delete booked time slots');
       return;
     }
 
     setTimeSlots(timeSlots.filter(s => s.id !== id));
-    toast.success('Đã xóa khe thời gian');
+    toast.success('Time slot deleted');
   };
 
   // Group slots by date
@@ -188,9 +188,9 @@ export default function TutoringSetup() {
   return (
     <div className="p-6">
       <div>
-        <h1>Quản lý giảng dạy</h1>
+        <h1>Tutoring Management</h1>
         <p className="text-gray-600 mt-1">
-          Đăng ký môn học có thể dạy và thiết lập lịch rảnh của bạn
+          Register subjects you can teach and set your availability
         </p>
       </div>
 
@@ -198,11 +198,11 @@ export default function TutoringSetup() {
         <TabsList>
           <TabsTrigger value="subjects">
             <BookOpen className="h-4 w-4 mr-2" />
-            Đăng ký môn học
+            Register Subjects
           </TabsTrigger>
           <TabsTrigger value="availability">
             <Calendar className="h-4 w-4 mr-2" />
-            Thiết lập lịch rảnh
+            Set Availability
           </TabsTrigger>
         </TabsList>
 
@@ -210,9 +210,9 @@ export default function TutoringSetup() {
         <TabsContent value="subjects" className="mt-6">
           <Card>
             <CardHeader>
-              <CardTitle>Môn học có thể dạy</CardTitle>
+              <CardTitle>Subjects You Can Teach</CardTitle>
               <p className="text-sm text-gray-600">
-                Chọn các môn học bạn có thể hỗ trợ sinh viên
+                Select subjects you can help students with
               </p>
             </CardHeader>
             <CardContent>
@@ -242,7 +242,7 @@ export default function TutoringSetup() {
                             <div>
                               <div>{subject.name}</div>
                               <div className="text-xs text-gray-500 mt-1">
-                                Mã: {subject.code}
+                                Code: {subject.code}
                               </div>
                             </div>
                             {subject.registered && (
@@ -261,7 +261,7 @@ export default function TutoringSetup() {
                   <BookOpen className="h-5 w-5 text-[#528DFF] mt-0.5" />
                   <div>
                     <p className="text-sm">
-                      Đã đăng ký: {registeredSubjects.length} môn học
+                      Registered: {registeredSubjects.length} subjects
                     </p>
                     <p className="text-xs text-gray-600 mt-1">
                       {registeredSubjects.map(s => s.name).join(', ')}
@@ -277,9 +277,9 @@ export default function TutoringSetup() {
         <TabsContent value="availability" className="mt-6">
           <div className="flex items-start justify-between mb-6">
             <div>
-              <h2>Lịch rảnh của bạn</h2>
+              <h2>Your Availability</h2>
               <p className="text-sm text-gray-600 mt-1">
-                Tạo các khe thời gian rảnh để sinh viên có thể đặt lịch
+                Create time slots for students to book sessions
               </p>
             </div>
             <Button 
@@ -288,7 +288,7 @@ export default function TutoringSetup() {
               disabled={registeredSubjects.length === 0}
             >
               <Plus className="mr-2 h-4 w-4" />
-              Thêm khe thời gian
+              Add Time Slot
             </Button>
           </div>
 
@@ -297,7 +297,7 @@ export default function TutoringSetup() {
               <CardContent className="p-12 text-center">
                 <BookOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-600">
-                  Vui lòng đăng ký môn học trước khi thiết lập lịch rảnh
+                  Please register subjects before setting availability
                 </p>
               </CardContent>
             </Card>
@@ -352,15 +352,15 @@ export default function TutoringSetup() {
 
                                 {slot.status === 'available' ? (
                                   <Badge className="mt-2 bg-green-600 hover:bg-green-700">
-                                    Còn trống
+                                    Available
                                   </Badge>
                                 ) : (
                                   <div className="mt-2">
                                     <Badge className="bg-blue-600 hover:bg-blue-700">
-                                      Đã đặt
+                                      Booked
                                     </Badge>
                                     <p className="text-xs text-gray-600 mt-1">
-                                      SV: {slot.studentName}
+                                      Student: {slot.studentName}
                                     </p>
                                   </div>
                                 )}
@@ -390,14 +390,14 @@ export default function TutoringSetup() {
                   <CardContent className="p-12 text-center">
                     <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                     <p className="text-gray-600">
-                      Bạn chưa thiết lập khe thời gian rảnh nào
+                      You haven't set up any time slots yet
                     </p>
                     <Button 
                       onClick={() => setDialogOpen(true)} 
                       className="mt-4 bg-[#528DFF] hover:bg-[#3d7ae8]"
                     >
                       <Plus className="mr-2 h-4 w-4" />
-                      Thêm khe thời gian đầu tiên
+                      Add Your First Time Slot
                     </Button>
                   </CardContent>
                 </Card>
@@ -411,11 +411,11 @@ export default function TutoringSetup() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Thêm khe thời gian rảnh</DialogTitle>
+            <DialogTitle>Add Time Slot</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="date">Ngày</Label>
+              <Label htmlFor="date">Date</Label>
               <Input
                 id="date"
                 type="date"
@@ -427,7 +427,7 @@ export default function TutoringSetup() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="startTime">Giờ bắt đầu</Label>
+                <Label htmlFor="startTime">Start Time</Label>
                 <Input
                   id="startTime"
                   type="time"
@@ -436,7 +436,7 @@ export default function TutoringSetup() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="endTime">Giờ kết thúc</Label>
+                <Label htmlFor="endTime">End Time</Label>
                 <Input
                   id="endTime"
                   type="time"
@@ -448,15 +448,15 @@ export default function TutoringSetup() {
 
             {/* Subject Selection */}
             <div className="space-y-2">
-              <Label>Môn học có thể dạy trong khe thời gian này</Label>
+              <Label>Subjects Available in This Time Slot</Label>
               <p className="text-xs text-gray-600">
-                Chọn các môn học bạn sẵn sàng dạy trong khe thời gian này
+                Select subjects you're ready to teach during this time
               </p>
               <div className="border rounded-lg p-4 max-h-48 overflow-y-auto">
                 <div className="space-y-3">
                   {registeredSubjects.length === 0 ? (
                     <p className="text-sm text-gray-500 text-center py-4">
-                      Bạn chưa đăng ký môn học nào
+                      You haven't registered any subjects yet
                     </p>
                   ) : (
                     registeredSubjects.map((subject) => (
@@ -482,7 +482,7 @@ export default function TutoringSetup() {
               </div>
               {selectedSubjectsForSlot.length > 0 && (
                 <p className="text-xs text-[#528DFF]">
-                  Đã chọn {selectedSubjectsForSlot.length} môn học
+                  {selectedSubjectsForSlot.length} subject(s) selected
                 </p>
               )}
             </div>
@@ -498,11 +498,11 @@ export default function TutoringSetup() {
                 setSelectedSubjectsForSlot([]);
               }}
             >
-              Hủy
+              Cancel
             </Button>
             <Button onClick={handleAddSlot} className="bg-[#528DFF] hover:bg-[#3d7ae8]">
               <Save className="mr-2 h-4 w-4" />
-              Lưu
+              Save
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -512,8 +512,8 @@ export default function TutoringSetup() {
       <ConfirmDialog
         open={deleteConfirmOpen}
         onOpenChange={setDeleteConfirmOpen}
-        title="Xóa khe thời gian"
-        description="Bạn có chắc chắn muốn xóa khe thời gian này không?"
+        title="Delete Time Slot"
+        description="Are you sure you want to delete this time slot?"
         onConfirm={() => {
           if (slotToDelete !== null) {
             handleDeleteSlot(slotToDelete);
