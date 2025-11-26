@@ -34,10 +34,8 @@ interface Resource {
 
 export default function ShareResources() {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [resourceType, setResourceType] = useState<'file' | 'link'>('file');
   const [title, setTitle] = useState('');
   const [subject, setSubject] = useState('');
-  const [url, setUrl] = useState('');
   const [description, setDescription] = useState('');
 
   const [resources, setResources] = useState<Resource[]>([
@@ -77,18 +75,13 @@ export default function ShareResources() {
       return;
     }
 
-    if (resourceType === 'link' && !url) {
-      toast.error('Please enter a URL');
-      return;
-    }
-
     const newResource: Resource = {
       id: Math.max(...resources.map(r => r.id), 0) + 1,
       title,
-      type: resourceType,
+      type: 'file',
       subject,
       uploadDate: new Date().toISOString().split('T')[0],
-      url: resourceType === 'file' ? '#' : url,
+      url: '#',
       description
     };
 
@@ -98,7 +91,6 @@ export default function ShareResources() {
     // Reset form
     setTitle('');
     setSubject('');
-    setUrl('');
     setDescription('');
     setDialogOpen(false);
   };
@@ -197,30 +189,6 @@ export default function ShareResources() {
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label>Resource Type</Label>
-              <div className="flex gap-4">
-                <Button
-                  type="button"
-                  variant={resourceType === 'file' ? 'default' : 'outline'}
-                  onClick={() => setResourceType('file')}
-                  className={resourceType === 'file' ? 'bg-[#528DFF] hover:bg-[#3d7ae8]' : ''}
-                >
-                  <Upload className="mr-2 h-4 w-4" />
-                  Upload File
-                </Button>
-                <Button
-                  type="button"
-                  variant={resourceType === 'link' ? 'default' : 'outline'}
-                  onClick={() => setResourceType('link')}
-                  className={resourceType === 'link' ? 'bg-[#528DFF] hover:bg-[#3d7ae8]' : ''}
-                >
-                  <LinkIcon className="mr-2 h-4 w-4" />
-                  Add Link
-                </Button>
-              </div>
-            </div>
-
-            <div className="space-y-2">
               <Label htmlFor="title">Resource Title</Label>
               <Input
                 id="title"
@@ -246,30 +214,17 @@ export default function ShareResources() {
               </Select>
             </div>
 
-            {resourceType === 'file' ? (
-              <div className="space-y-2">
-                <Label htmlFor="file">Choose File</Label>
-                <Input
-                  id="file"
-                  type="file"
-                  accept=".pdf,.doc,.docx,.ppt,.pptx"
-                />
-                <p className="text-xs text-gray-500">
-                  Supported: PDF, Word, PowerPoint (Max 10MB)
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                <Label htmlFor="url">URL</Label>
-                <Input
-                  id="url"
-                  type="url"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  placeholder="https://example.com"
-                />
-              </div>
-            )}
+            <div className="space-y-2">
+              <Label htmlFor="file">Choose File</Label>
+              <Input
+                id="file"
+                type="file"
+                accept=".pdf,.doc,.docx,.ppt,.pptx"
+              />
+              <p className="text-xs text-gray-500">
+                Supported: PDF, Word, PowerPoint (Max 10MB)
+              </p>
+            </div>
 
             <div className="space-y-2">
               <Label htmlFor="description">Description (Optional)</Label>
