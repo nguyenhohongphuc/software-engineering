@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Home, Calendar, Clock, Users, FileText, User, BookOpen } from 'lucide-react';
+import { Home, Calendar, Clock, Users, FileText, User, BookOpen, Book } from 'lucide-react';
 import LayoutHeader from '../LayoutHeader';
 import TutorDashboard from './TutorDashboard';
 import MySchedule from './MySchedule';
 import TutoringSetup from './TutoringSetup';
 import MyStudents from './MyStudents';
 import ShareResources from './ShareResources';
+import Resources from './Resources';
 import UpdateProfile from './UpdateProfile';
 import { User as UserType } from '../../App';
 
@@ -14,7 +15,7 @@ interface TutorLayoutProps {
   onLogout: () => void;
 }
 
-type TutorPage = 'dashboard' | 'schedule' | 'tutoring' | 'students' | 'resources' | 'profile';
+type TutorPage = 'dashboard' | 'schedule' | 'tutoring' | 'students' | 'resources' | 'view-resources' | 'profile';
 
 export default function TutorLayout({ user, onLogout }: TutorLayoutProps) {
   const [currentPage, setCurrentPage] = useState<TutorPage>('dashboard');
@@ -25,6 +26,7 @@ export default function TutorLayout({ user, onLogout }: TutorLayoutProps) {
     { id: 'tutoring' as TutorPage, label: 'Tutoring Management', icon: BookOpen },
     { id: 'students' as TutorPage, label: 'My Students', icon: Users },
     { id: 'resources' as TutorPage, label: 'Share Resources', icon: FileText },
+    { id: 'view-resources' as TutorPage, label: 'View Resources', icon: Book },
     { id: 'profile' as TutorPage, label: 'Profile', icon: User },
   ];
 
@@ -40,6 +42,8 @@ export default function TutorLayout({ user, onLogout }: TutorLayoutProps) {
         return <MyStudents />;
       case 'resources':
         return <ShareResources />;
+      case 'view-resources':
+        return <Resources />;
       case 'profile':
         return <UpdateProfile user={user} />;
       default:

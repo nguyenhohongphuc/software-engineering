@@ -58,13 +58,40 @@ export default function ShareResources() {
     },
     {
       id: 3,
-      title: 'Matrix Tutorial Video',
-      type: 'link',
-      subject: 'Linear Algebra',
+      title: 'Calculus 2 - Chapter 2: Advanced Integration Techniques',
+      type: 'file',
+      subject: 'Calculus 2',
+      uploadDate: '2025-10-22',
+      url: '#',
+      description: 'Integration by parts, substitution, and partial fractions'
+    },
+    {
+      id: 4,
+      title: 'Calculus 2 - Practice Problems Set 3',
+      type: 'file',
+      subject: 'Calculus 2',
       uploadDate: '2025-10-20',
-      url: 'https://youtube.com/example',
-      description: 'Detailed video explaining matrices'
-    }
+      url: '#',
+      description: 'Additional practice problems with detailed solutions'
+    },
+    {
+      id: 5,
+      title: 'Linear Algebra - Eigenvalues and Eigenvectors',
+      type: 'file',
+      subject: 'Linear Algebra',
+      uploadDate: '2025-10-18',
+      url: '#',
+      description: 'Complete guide with examples and applications'
+    },
+    {
+      id: 6,
+      title: 'Discrete Mathematics - Graph Theory Basics',
+      type: 'file',
+      subject: 'Discrete Mathematics',
+      uploadDate: '2025-10-15',
+      url: '#',
+      description: 'Introduction to graphs, trees, and graph algorithms'
+    },
   ]);
 
   const subjects = ['Calculus 2', 'Linear Algebra', 'Discrete Mathematics'];
