@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Calendar, Clock, Plus, X, Save, BookOpen, Check } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { Calendar, Clock, Save, BookOpen, Check, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -13,8 +13,6 @@ import {
   DialogFooter,
 } from '../ui/dialog';
 import { Label } from '../ui/label';
-import { Input } from '../ui/input';
-import { ConfirmDialog } from '../ui/confirm-dialog';
 import { toast } from 'sonner@2.0.3';
 
 interface Subject {
@@ -26,25 +24,15 @@ interface Subject {
 
 interface TimeSlot {
   id: number;
-  date: string;
-  dayOfWeek: string;
-  startTime: string;
-  endTime: string;
+  dayOfWeek: number; // 0 = Sunday, 1 = Monday, etc.
+  startHour: number; // 0-23
+  endHour: number; // 1-24
   status: 'available' | 'booked';
   subjects: string[]; // Array of subject IDs
   studentName?: string;
 }
 
 export default function TutoringSetup() {
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState('');
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
-  const [selectedSubjectsForSlot, setSelectedSubjectsForSlot] = useState<string[]>([]);
-  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const [slotToDelete, setSlotToDelete] = useState<number | null>(null);
-
-  // Available subjects
   const [subjects, setSubjects] = useState<Subject[]>([
     { id: '1', name: 'Calculus 2', code: 'MT1007', registered: true },
     { id: '2', name: 'Linear Algebra', code: 'MT1003', registered: true },
@@ -54,46 +42,52 @@ export default function TutoringSetup() {
     { id: '6', name: 'Differential Equations', code: 'MT2015', registered: false },
   ]);
 
-  // Time slots with subjects
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([
     {
       id: 1,
-      date: '2025-11-30',
-      dayOfWeek: 'Sunday',
-      startTime: '08:00',
-      endTime: '10:00',
+      dayOfWeek: 0,
+      startHour: 8,
+      endHour: 10,
       status: 'available',
-      subjects: ['1', '2'] // Calculus 2, Linear Algebra
+      subjects: ['1', '2']
     },
     {
       id: 2,
-      date: '2025-11-30',
-      dayOfWeek: 'Sunday',
-      startTime: '14:00',
-      endTime: '16:00',
+      dayOfWeek: 0,
+      startHour: 14,
+      endHour: 16,
       status: 'booked',
       subjects: ['1'],
       studentName: 'Nguyen Van A'
     },
     {
       id: 3,
-      date: '2025-12-01',
-      dayOfWeek: 'Monday',
-      startTime: '09:00',
-      endTime: '11:00',
+      dayOfWeek: 1,
+      startHour: 9,
+      endHour: 11,
       status: 'available',
       subjects: ['2', '3']
     },
     {
       id: 4,
-      date: '2025-12-01',
-      dayOfWeek: 'Monday',
-      startTime: '15:00',
-      endTime: '17:00',
+      dayOfWeek: 1,
+      startHour: 15,
+      endHour: 17,
       status: 'available',
       subjects: ['1', '2', '3']
     },
   ]);
+
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState<{ day: number; hour: number } | null>(null);
+  const [dragEnd, setDragEnd] = useState<{ day: number; hour: number } | null>(null);
+  const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const hours = Array.from({ length: 16 }, (_, i) => i + 6); // 6 AM to 9 PM
+
+  const registeredSubjects = subjects.filter(s => s.registered);
 
   const handleSubjectToggle = (subjectId: string) => {
     setSubjects(subjects.map(s => 
@@ -102,60 +96,119 @@ export default function TutoringSetup() {
   };
 
   const handleSlotSubjectToggle = (subjectId: string) => {
-    setSelectedSubjectsForSlot(prev => 
+    setSelectedSubjects(prev => 
       prev.includes(subjectId) 
         ? prev.filter(id => id !== subjectId)
         : [...prev, subjectId]
     );
   };
 
-  const handleAddSlot = () => {
-    if (!selectedDate || !startTime || !endTime) {
-      toast.error('Please fill in all information');
+  const getCellKey = (day: number, hour: number) => `${day}-${hour}`;
+
+  const isSlotOccupied = (day: number, hour: number) => {
+    return timeSlots.some(
+      slot => slot.dayOfWeek === day && hour >= slot.startHour && hour < slot.endHour
+    );
+  };
+
+  const getSlotAtCell = (day: number, hour: number) => {
+    return timeSlots.find(
+      slot => slot.dayOfWeek === day && hour >= slot.startHour && hour < slot.endHour
+    );
+  };
+
+  const isCellSelected = (day: number, hour: number) => {
+    if (!dragStart || !dragEnd) return false;
+    
+    const minDay = Math.min(dragStart.day, dragEnd.day);
+    const maxDay = Math.max(dragStart.day, dragEnd.day);
+    const minHour = Math.min(dragStart.hour, dragEnd.hour);
+    const maxHour = Math.max(dragStart.hour, dragEnd.hour);
+    
+    return day >= minDay && day <= maxDay && hour >= minHour && hour <= maxHour;
+  };
+
+  const handleMouseDown = (day: number, hour: number) => {
+    if (registeredSubjects.length === 0) {
+      toast.error('Please register subjects before setting availability');
       return;
     }
 
-    if (startTime >= endTime) {
-      toast.error('End time must be after start time');
-      return;
+    // Don't allow selecting over booked slots
+    if (isSlotOccupied(day, hour)) {
+      const slot = getSlotAtCell(day, hour);
+      if (slot?.status === 'booked') {
+        toast.error('Cannot modify booked time slots');
+        return;
+      }
     }
 
-    if (selectedSubjectsForSlot.length === 0) {
+    setIsDragging(true);
+    setDragStart({ day, hour });
+    setDragEnd({ day, hour });
+  };
+
+  const handleMouseEnter = (day: number, hour: number) => {
+    if (isDragging && dragStart) {
+      // Restrict to same day for simplicity
+      if (day === dragStart.day) {
+        setDragEnd({ day, hour });
+      }
+    }
+  };
+
+  const handleMouseUp = () => {
+    if (isDragging && dragStart && dragEnd) {
+      // Check if selection overlaps with existing slots
+      const minHour = Math.min(dragStart.hour, dragEnd.hour);
+      const maxHour = Math.max(dragStart.hour, dragEnd.hour) + 1;
+      
+      const hasOverlap = timeSlots.some(
+        slot => slot.dayOfWeek === dragStart.day && 
+                ((slot.startHour >= minHour && slot.startHour < maxHour) ||
+                 (slot.endHour > minHour && slot.endHour <= maxHour) ||
+                 (slot.startHour <= minHour && slot.endHour >= maxHour))
+      );
+
+      if (hasOverlap) {
+        toast.error('Selected time overlaps with existing slots');
+        setIsDragging(false);
+        setDragStart(null);
+        setDragEnd(null);
+        return;
+      }
+
+      // Open dialog to select subjects
+      setDialogOpen(true);
+    }
+  };
+
+  const handleSaveSlot = () => {
+    if (!dragStart || !dragEnd || selectedSubjects.length === 0) {
       toast.error('Please select at least one subject');
       return;
     }
 
-    const dayOfWeekMap: { [key: string]: string } = {
-      '0': 'Sunday',
-      '1': 'Monday',
-      '2': 'Tuesday',
-      '3': 'Wednesday',
-      '4': 'Thursday',
-      '5': 'Friday',
-      '6': 'Saturday'
-    };
-
-    const date = new Date(selectedDate);
-    const dayOfWeek = dayOfWeekMap[date.getDay().toString()];
+    const minHour = Math.min(dragStart.hour, dragEnd.hour);
+    const maxHour = Math.max(dragStart.hour, dragEnd.hour) + 1;
 
     const newSlot: TimeSlot = {
       id: Math.max(...timeSlots.map(s => s.id), 0) + 1,
-      date: selectedDate,
-      dayOfWeek,
-      startTime,
-      endTime,
+      dayOfWeek: dragStart.day,
+      startHour: minHour,
+      endHour: maxHour,
       status: 'available',
-      subjects: selectedSubjectsForSlot
+      subjects: selectedSubjects
     };
 
     setTimeSlots([...timeSlots, newSlot]);
-    toast.success('New time slot added successfully');
-    
-    // Reset form
-    setSelectedDate('');
-    setStartTime('');
-    setEndTime('');
-    setSelectedSubjectsForSlot([]);
+    toast.success('Time slot added successfully');
+
+    // Reset
+    setIsDragging(false);
+    setDragStart(null);
+    setDragEnd(null);
+    setSelectedSubjects([]);
     setDialogOpen(false);
   };
 
@@ -170,20 +223,15 @@ export default function TutoringSetup() {
     toast.success('Time slot deleted');
   };
 
-  // Group slots by date
-  const groupedSlots = timeSlots.reduce((acc, slot) => {
-    if (!acc[slot.date]) {
-      acc[slot.date] = [];
-    }
-    acc[slot.date].push(slot);
-    return acc;
-  }, {} as Record<string, TimeSlot[]>);
-
   const getSubjectName = (subjectId: string) => {
     return subjects.find(s => s.id === subjectId)?.name || '';
   };
 
-  const registeredSubjects = subjects.filter(s => s.registered);
+  const formatHour = (hour: number) => {
+    const period = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+    return `${displayHour}:00 ${period}`;
+  };
 
   return (
     <div className="p-6">
@@ -275,21 +323,11 @@ export default function TutoringSetup() {
 
         {/* Availability Schedule Tab */}
         <TabsContent value="availability" className="mt-6">
-          <div className="flex items-start justify-between mb-6">
-            <div>
-              <h2>Your Availability</h2>
-              <p className="text-sm text-gray-600 mt-1">
-                Create time slots for students to book sessions
-              </p>
-            </div>
-            <Button 
-              onClick={() => setDialogOpen(true)} 
-              className="bg-[#528DFF] hover:bg-[#3d7ae8]"
-              disabled={registeredSubjects.length === 0}
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Add Time Slot
-            </Button>
+          <div className="mb-6">
+            <h2>Weekly Availability Calendar</h2>
+            <p className="text-sm text-gray-600 mt-1">
+              Click and drag on the calendar to select your available hours
+            </p>
           </div>
 
           {registeredSubjects.length === 0 ? (
@@ -302,189 +340,172 @@ export default function TutoringSetup() {
               </CardContent>
             </Card>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-              {Object.entries(groupedSlots)
-                .sort(([dateA], [dateB]) => dateA.localeCompare(dateB))
-                .map(([date, slots]) => (
-                  <Card key={date}>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2 text-sm">
-                        <Calendar className="h-5 w-5 text-[#528DFF]" />
-                        <div>
-                          <div>{slots[0].dayOfWeek}</div>
-                          <div className="text-xs text-gray-500">{date}</div>
-                        </div>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      {slots
-                        .sort((a, b) => a.startTime.localeCompare(b.startTime))
-                        .map((slot) => (
-                          <div
-                            key={slot.id}
-                            className={`p-3 rounded-lg border-2 ${
-                              slot.status === 'available'
-                                ? 'border-green-200 bg-green-50'
-                                : 'border-blue-200 bg-blue-50'
-                            }`}
-                          >
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2">
-                                  <Clock className="h-4 w-4" />
-                                  <span className="text-sm">
-                                    {slot.startTime} - {slot.endTime}
-                                  </span>
-                                </div>
-                                
-                                {/* Subjects for this slot */}
-                                <div className="flex flex-wrap gap-1 mt-2">
-                                  {slot.subjects.map(subjectId => (
-                                    <Badge 
-                                      key={subjectId}
-                                      variant="outline"
-                                      className="text-xs"
-                                    >
-                                      {getSubjectName(subjectId)}
-                                    </Badge>
-                                  ))}
-                                </div>
+            <Card>
+              <CardContent className="p-6">
+                <div className="overflow-x-auto">
+                  <div 
+                    className="inline-block min-w-full select-none"
+                    onMouseUp={handleMouseUp}
+                    onMouseLeave={() => {
+                      if (isDragging) {
+                        handleMouseUp();
+                      }
+                    }}
+                  >
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr>
+                          <th className="border border-gray-300 bg-gray-100 p-2 text-sm w-24">
+                            Time
+                          </th>
+                          {daysOfWeek.map((day, index) => (
+                            <th 
+                              key={index} 
+                              className="border border-gray-300 bg-gray-100 p-2 text-sm min-w-[100px]"
+                            >
+                              {day}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {hours.map((hour) => (
+                          <tr key={hour}>
+                            <td className="border border-gray-300 bg-gray-50 p-2 text-xs text-center">
+                              {formatHour(hour)}
+                            </td>
+                            {daysOfWeek.map((_, dayIndex) => {
+                              const slot = getSlotAtCell(dayIndex, hour);
+                              const isSelected = isCellSelected(dayIndex, hour);
+                              const isOccupied = isSlotOccupied(dayIndex, hour);
 
-                                {slot.status === 'available' ? (
-                                  <Badge className="mt-2 bg-green-600 hover:bg-green-700">
-                                    Available
-                                  </Badge>
-                                ) : (
-                                  <div className="mt-2">
-                                    <Badge className="bg-blue-600 hover:bg-blue-700">
-                                      Booked
-                                    </Badge>
-                                    <p className="text-xs text-gray-600 mt-1">
-                                      Student: {slot.studentName}
-                                    </p>
-                                  </div>
-                                )}
-                              </div>
-                              {slot.status === 'available' && (
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  onClick={() => {
-                                    setDeleteConfirmOpen(true);
-                                    setSlotToDelete(slot.id);
-                                  }}
-                                  className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-100"
+                              // Check if this is the first cell of a slot
+                              const isSlotStart = slot && slot.startHour === hour;
+
+                              return (
+                                <td
+                                  key={`${dayIndex}-${hour}`}
+                                  className={`border border-gray-300 p-0 h-12 cursor-pointer relative ${
+                                    isSelected && isDragging
+                                      ? 'bg-blue-200 border-blue-400'
+                                      : isOccupied
+                                      ? slot?.status === 'booked'
+                                        ? 'bg-purple-100'
+                                        : 'bg-green-100'
+                                      : 'bg-white hover:bg-gray-50'
+                                  }`}
+                                  onMouseDown={() => handleMouseDown(dayIndex, hour)}
+                                  onMouseEnter={() => handleMouseEnter(dayIndex, hour)}
                                 >
-                                  <X className="h-4 w-4" />
-                                </Button>
-                              )}
-                            </div>
-                          </div>
+                                  {isSlotStart && slot && (
+                                    <div className="absolute inset-0 flex items-center justify-center p-1">
+                                      <div className="w-full">
+                                        <div className="flex items-center justify-between gap-1">
+                                          <div className="flex-1 min-w-0">
+                                            <p className="text-xs truncate">
+                                              {formatHour(slot.startHour)} - {formatHour(slot.endHour)}
+                                            </p>
+                                            <div className="flex flex-wrap gap-0.5 mt-0.5">
+                                              {slot.subjects.slice(0, 2).map(subjectId => (
+                                                <Badge 
+                                                  key={subjectId}
+                                                  variant="secondary"
+                                                  className="text-[10px] px-1 py-0"
+                                                >
+                                                  {getSubjectName(subjectId).substring(0, 8)}
+                                                </Badge>
+                                              ))}
+                                            </div>
+                                            {slot.status === 'booked' && (
+                                              <p className="text-[10px] text-purple-700 mt-0.5 truncate">
+                                                {slot.studentName}
+                                              </p>
+                                            )}
+                                          </div>
+                                          {slot.status === 'available' && (
+                                            <Button
+                                              size="icon"
+                                              variant="ghost"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDeleteSlot(slot.id);
+                                              }}
+                                              className="h-5 w-5 text-red-600 hover:text-red-700 hover:bg-red-100 flex-shrink-0"
+                                            >
+                                              <Trash2 className="h-3 w-3" />
+                                            </Button>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )}
+                                </td>
+                              );
+                            })}
+                          </tr>
                         ))}
-                    </CardContent>
-                  </Card>
-                ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
 
-              {Object.keys(groupedSlots).length === 0 && (
-                <Card className="col-span-full">
-                  <CardContent className="p-12 text-center">
-                    <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-600">
-                      You haven't set up any time slots yet
-                    </p>
-                    <Button 
-                      onClick={() => setDialogOpen(true)} 
-                      className="mt-4 bg-[#528DFF] hover:bg-[#3d7ae8]"
-                    >
-                      <Plus className="mr-2 h-4 w-4" />
-                      Add Your First Time Slot
-                    </Button>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
+                <div className="mt-4 flex items-center gap-6 text-sm">
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 bg-green-100 border border-gray-300 rounded"></div>
+                    <span>Available</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 bg-purple-100 border border-gray-300 rounded"></div>
+                    <span>Booked</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 bg-blue-200 border border-blue-400 rounded"></div>
+                    <span>Selecting</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           )}
         </TabsContent>
       </Tabs>
 
-      {/* Add Time Slot Dialog */}
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-2xl">
+      {/* Subject Selection Dialog */}
+      <Dialog open={dialogOpen} onOpenChange={(open) => {
+        if (!open) {
+          setDialogOpen(false);
+          setIsDragging(false);
+          setDragStart(null);
+          setDragEnd(null);
+          setSelectedSubjects([]);
+        }
+      }}>
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add Time Slot</DialogTitle>
+            <DialogTitle>Select Subjects for Time Slot</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="date">Date</Label>
-              <Input
-                id="date"
-                type="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                min={new Date().toISOString().split('T')[0]}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="startTime">Start Time</Label>
-                <Input
-                  id="startTime"
-                  type="time"
-                  value={startTime}
-                  onChange={(e) => setStartTime(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="endTime">End Time</Label>
-                <Input
-                  id="endTime"
-                  type="time"
-                  value={endTime}
-                  onChange={(e) => setEndTime(e.target.value)}
-                />
-              </div>
-            </div>
-
-            {/* Subject Selection */}
-            <div className="space-y-2">
-              <Label>Subjects Available in This Time Slot</Label>
-              <p className="text-xs text-gray-600">
-                Select subjects you're ready to teach during this time
-              </p>
-              <div className="border rounded-lg p-4 max-h-48 overflow-y-auto">
-                <div className="space-y-3">
-                  {registeredSubjects.length === 0 ? (
-                    <p className="text-sm text-gray-500 text-center py-4">
-                      You haven't registered any subjects yet
-                    </p>
-                  ) : (
-                    registeredSubjects.map((subject) => (
-                      <div key={subject.id} className="flex items-center gap-3">
-                        <Checkbox
-                          id={`slot-${subject.id}`}
-                          checked={selectedSubjectsForSlot.includes(subject.id)}
-                          onCheckedChange={() => handleSlotSubjectToggle(subject.id)}
-                        />
-                        <Label
-                          htmlFor={`slot-${subject.id}`}
-                          className="cursor-pointer flex-1"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span>{subject.name}</span>
-                            <span className="text-xs text-gray-500">{subject.code}</span>
-                          </div>
-                        </Label>
-                      </div>
-                    ))
-                  )}
+            <p className="text-sm text-gray-600">
+              Choose which subjects you can teach during this time:
+            </p>
+            <div className="space-y-3">
+              {registeredSubjects.map((subject) => (
+                <div key={subject.id} className="flex items-center gap-3">
+                  <Checkbox
+                    id={`dialog-${subject.id}`}
+                    checked={selectedSubjects.includes(subject.id)}
+                    onCheckedChange={() => handleSlotSubjectToggle(subject.id)}
+                  />
+                  <Label
+                    htmlFor={`dialog-${subject.id}`}
+                    className="cursor-pointer flex-1"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span>{subject.name}</span>
+                      <span className="text-xs text-gray-500">{subject.code}</span>
+                    </div>
+                  </Label>
                 </div>
-              </div>
-              {selectedSubjectsForSlot.length > 0 && (
-                <p className="text-xs text-[#528DFF]">
-                  {selectedSubjectsForSlot.length} subject(s) selected
-                </p>
-              )}
+              ))}
             </div>
           </div>
           <DialogFooter>
@@ -492,35 +513,25 @@ export default function TutoringSetup() {
               variant="outline" 
               onClick={() => {
                 setDialogOpen(false);
-                setSelectedDate('');
-                setStartTime('');
-                setEndTime('');
-                setSelectedSubjectsForSlot([]);
+                setIsDragging(false);
+                setDragStart(null);
+                setDragEnd(null);
+                setSelectedSubjects([]);
               }}
             >
               Cancel
             </Button>
-            <Button onClick={handleAddSlot} className="bg-[#528DFF] hover:bg-[#3d7ae8]">
+            <Button 
+              onClick={handleSaveSlot} 
+              className="bg-[#528DFF] hover:bg-[#3d7ae8]"
+              disabled={selectedSubjects.length === 0}
+            >
               <Save className="mr-2 h-4 w-4" />
-              Save
+              Save Time Slot
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {/* Delete Time Slot Confirmation Dialog */}
-      <ConfirmDialog
-        open={deleteConfirmOpen}
-        onOpenChange={setDeleteConfirmOpen}
-        title="Delete Time Slot"
-        description="Are you sure you want to delete this time slot?"
-        onConfirm={() => {
-          if (slotToDelete !== null) {
-            handleDeleteSlot(slotToDelete);
-          }
-          setDeleteConfirmOpen(false);
-        }}
-      />
     </div>
   );
 }

@@ -9,6 +9,7 @@ import { Checkbox } from '../ui/checkbox';
 import { Label } from '../ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { toast } from 'sonner@2.0.3';
 import TutorDetail from './TutorDetail';
 
 interface Tutor {

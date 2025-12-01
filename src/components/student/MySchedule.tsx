@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Calendar, Clock, MapPin, Video, MoreVertical, X, RefreshCw } from 'lucide-react';
+import { Calendar, Clock, MapPin, Video, MoreVertical, X, RefreshCw, Star } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
@@ -21,6 +21,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '../ui/alert-dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '../ui/dialog';
+import { Textarea } from '../ui/textarea';
 import { toast } from 'sonner@2.0.3';
 
 interface Session {
@@ -34,6 +43,7 @@ interface Session {
   type: 'online' | 'offline';
   status: 'upcoming' | 'completed' | 'cancelled';
   meetLink?: string;
+  rated?: boolean;
 }
 
 export default function MySchedule() {
@@ -98,7 +108,11 @@ export default function MySchedule() {
 
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
   const [rescheduleDialogOpen, setRescheduleDialogOpen] = useState(false);
+  const [ratingDialogOpen, setRatingDialogOpen] = useState(false);
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [comment, setComment] = useState('');
 
   const handleCancel = () => {
     if (selectedSession) {
@@ -115,6 +129,19 @@ export default function MySchedule() {
     toast.success('Reschedule request sent to tutor');
     setRescheduleDialogOpen(false);
     setSelectedSession(null);
+  };
+
+  const handleRating = () => {
+    if (selectedSession) {
+      setSessions(sessions.map(s => 
+        s.id === selectedSession.id ? { ...s, rated: true } : s
+      ));
+      toast.success('Session rated successfully');
+      setRatingDialogOpen(false);
+      setSelectedSession(null);
+      setRating(0);
+      setComment('');
+    }
   };
 
   const upcomingSessions = sessions.filter(s => s.status === 'upcoming');
@@ -199,9 +226,20 @@ export default function MySchedule() {
             )}
 
             {session.status === 'completed' && (
-              <Button variant="outline" className="mt-4">
-                Rate Session
-              </Button>
+              session.rated ? (
+                <Button variant="outline" className="mt-4" disabled>
+                  <Star className="mr-2 h-4 w-4 fill-yellow-400 text-yellow-400" />
+                  Rated
+                </Button>
+              ) : (
+                <Button variant="outline" className="mt-4" onClick={() => {
+                  setSelectedSession(session);
+                  setRatingDialogOpen(true);
+                }}>
+                  <Star className="mr-2 h-4 w-4" />
+                  Rate Session
+                </Button>
+              )
             )}
           </div>
         </div>
@@ -306,6 +344,76 @@ export default function MySchedule() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Rating Dialog */}
+      <Dialog open={ratingDialogOpen} onOpenChange={setRatingDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Rate Session</DialogTitle>
+            <DialogDescription>
+              Please rate your session with <strong>{selectedSession?.tutor}</strong> for <strong>{selectedSession?.subject}</strong> on {selectedSession?.date}.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            {/* Star Rating */}
+            <div>
+              <p className="text-sm mb-2">Rating</p>
+              <div className="flex items-center gap-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star
+                    key={star}
+                    className={`h-8 w-8 cursor-pointer transition-colors ${
+                      star <= (hoverRating || rating) 
+                        ? 'fill-yellow-400 text-yellow-400' 
+                        : 'text-gray-300'
+                    }`}
+                    onMouseEnter={() => setHoverRating(star)}
+                    onMouseLeave={() => setHoverRating(0)}
+                    onClick={() => setRating(star)}
+                  />
+                ))}
+                {rating > 0 && (
+                  <span className="ml-2 text-sm text-gray-600">
+                    {rating} {rating === 1 ? 'star' : 'stars'}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Comment */}
+            <div>
+              <p className="text-sm mb-2">Comment (optional)</p>
+              <Textarea
+                placeholder="Share your experience with this tutoring session..."
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                rows={4}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setRatingDialogOpen(false);
+                setRating(0);
+                setComment('');
+              }}
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleRating}
+              disabled={rating === 0}
+              className="bg-[#528DFF] hover:bg-[#3d7ae8]"
+            >
+              Submit Rating
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
