@@ -1,16 +1,11 @@
 import { useState } from 'react';
-import { FileText, Download, ExternalLink, BookOpen, Filter } from 'lucide-react';
+import { Filter, FileText, ExternalLink, Download, BookOpen } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { toast } from 'sonner@2.0.3';
 
 interface Resource {
   id: number;
@@ -114,6 +109,10 @@ export default function Resources() {
     return <Badge variant="secondary" className="bg-blue-100 text-blue-700">Link</Badge>;
   };
 
+  const handleDownload = (resource: Resource) => {
+    toast.success(`Downloading "${resource.title}"`);
+  };
+
   return (
     <div className="p-6">
       <div>
@@ -162,7 +161,7 @@ export default function Resources() {
                         )}
                       </div>
                     </div>
-                    <Button size="sm" className="bg-[#528DFF] hover:bg-[#3d7ae8]">
+                    <Button size="sm" className="bg-[#528DFF] hover:bg-[#3d7ae8]" onClick={() => handleDownload(resource)}>
                       {resource.type === 'pdf' ? (
                         <>
                           <Download className="h-4 w-4 mr-2" />

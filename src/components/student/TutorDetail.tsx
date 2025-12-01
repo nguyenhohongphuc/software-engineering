@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Star, Award, BookOpen, Calendar, Clock } from 'lucide-react';
+import { Star, Award, BookOpen, Calendar, Clock, CheckCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
@@ -28,6 +28,8 @@ interface TutorDetailProps {
 
 export default function TutorDetail({ tutor, onClose }: TutorDetailProps) {
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
+  const [bookingSuccess, setBookingSuccess] = useState(false);
+  const [bookedSlot, setBookedSlot] = useState<TimeSlot | null>(null);
 
   // Mock time slots for the week
   const timeSlots: TimeSlot[] = [
@@ -49,8 +51,103 @@ export default function TutorDetail({ tutor, onClose }: TutorDetailProps) {
 
     const slot = timeSlots.find(s => s.id === selectedSlot);
     toast.success(`Successfully booked session with ${tutor.name} on ${slot?.dayOfWeek}, ${slot?.time}`);
-    onClose();
+    setBookedSlot(slot || null);
+    setBookingSuccess(true);
   };
+
+  // Success Screen
+  if (bookingSuccess && bookedSlot) {
+    return (
+      <div className="space-y-6 text-center py-8">
+        {/* Success Icon */}
+        <div className="flex justify-center">
+          <div className="h-24 w-24 bg-green-100 rounded-full flex items-center justify-center">
+            <CheckCircle className="h-16 w-16 text-green-600" />
+          </div>
+        </div>
+
+        {/* Success Message */}
+        <div>
+          <h2 className="text-green-600">Booking Successful!</h2>
+          <p className="text-gray-600 mt-2">
+            Your tutoring session has been confirmed
+          </p>
+        </div>
+
+        {/* Booking Details */}
+        <div className="bg-blue-50 border-2 border-[#528DFF] rounded-lg p-6 text-left max-w-md mx-auto">
+          <h3 className="text-sm mb-4 text-center">Session Details</h3>
+          
+          <div className="space-y-4">
+            {/* Tutor Info */}
+            <div className="flex items-center gap-3">
+              <Avatar className="h-12 w-12">
+                <AvatarImage src={tutor.avatar} alt={tutor.name} />
+                <AvatarFallback>{tutor.name.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <div>
+                <p className="text-sm">Tutor</p>
+                <p className="text-sm text-gray-900">{tutor.name}</p>
+              </div>
+            </div>
+
+            <div className="border-t pt-4 space-y-3">
+              {/* Date */}
+              <div className="flex items-center gap-3">
+                <Calendar className="h-5 w-5 text-[#528DFF]" />
+                <div>
+                  <p className="text-xs text-gray-600">Date</p>
+                  <p className="text-sm">{bookedSlot.dayOfWeek}, {bookedSlot.date}</p>
+                </div>
+              </div>
+
+              {/* Time */}
+              <div className="flex items-center gap-3">
+                <Clock className="h-5 w-5 text-[#528DFF]" />
+                <div>
+                  <p className="text-xs text-gray-600">Time</p>
+                  <p className="text-sm">{bookedSlot.time}</p>
+                </div>
+              </div>
+
+              {/* Subject */}
+              <div className="flex items-center gap-3">
+                <BookOpen className="h-5 w-5 text-[#528DFF]" />
+                <div>
+                  <p className="text-xs text-gray-600">Subject</p>
+                  <p className="text-sm">{tutor.subjects[0]}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Info Message */}
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-left max-w-md mx-auto">
+          <p className="text-sm text-yellow-800">
+            📧 A confirmation email has been sent to your email address with session details and meeting link.
+          </p>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex gap-3 pt-4 max-w-md mx-auto">
+          <Button 
+            variant="outline" 
+            onClick={onClose} 
+            className="flex-1"
+          >
+            Close
+          </Button>
+          <Button 
+            onClick={onClose}
+            className="flex-1 bg-[#528DFF] hover:bg-[#3d7ae8]"
+          >
+            View My Schedule
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
